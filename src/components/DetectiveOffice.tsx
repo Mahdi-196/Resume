@@ -116,49 +116,6 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         <meshStandardMaterial color="#2a1810" />
       </mesh>
 
-      {/* Banker's Lamp on Desk */}
-      <group 
-        position={[-1.5, 1.2, 0]}
-        onClick={() => onInteraction('lamp')}
-        onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-        onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-      >
-        {/* Lamp Base */}
-        <mesh position={[0, -0.1, 0]}>
-          <cylinderGeometry args={[0.15, 0.2, 0.2]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
-        </mesh>
-        
-        {/* Lamp Stem */}
-        <mesh position={[0, 0.2, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 0.6]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
-        </mesh>
-        
-        {/* Green Banker's Lamp Shade */}
-        <mesh position={[0, 0.5, 0]}>
-          <cylinderGeometry args={[0.4, 0.3, 0.3]} />
-          <meshStandardMaterial 
-            color="#2d5016" 
-            emissive="#d4af37" 
-            emissiveIntensity={0.3}
-            metalness={0.1}
-            roughness={0.8}
-          />
-        </mesh>
-        
-        {/* Light Bulb */}
-        <mesh position={[0, 0.4, 0]}>
-          <sphereGeometry args={[0.08]} />
-          <meshStandardMaterial 
-            color="#fff8dc" 
-            emissive="#ffd700" 
-            emissiveIntensity={0.8}
-            transparent
-            opacity={0.9}
-          />
-        </mesh>
-      </group>
 
       {/* Typewriter */}
       <group 
@@ -366,7 +323,63 @@ const OfficeWindow = () => {
   );
 };
 
-// Remove the old HangingLamp component since we're using desk lamp
+// Chandelier Component
+const Chandelier = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
+  return (
+    <group 
+      position={[0, 8.5, -2]}
+      onClick={() => onInteraction('lamp')}
+      onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
+      onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
+    >
+      {/* Chain */}
+      <mesh position={[0, 0.8, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 1.6]} />
+        <meshStandardMaterial color="#4a4a4a" metalness={0.8} roughness={0.3} />
+      </mesh>
+      
+      {/* Main Body */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.4]} />
+        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.2} />
+      </mesh>
+      
+      {/* Arms */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <group key={i} rotation={[0, (i * Math.PI * 2) / 5, 0]}>
+          <mesh position={[0.6, 0, 0]} rotation={[0, 0, -0.3]}>
+            <cylinderGeometry args={[0.02, 0.02, 0.8]} />
+            <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.2} />
+          </mesh>
+          
+          {/* Candle Holders */}
+          <mesh position={[1, -0.2, 0]}>
+            <cylinderGeometry args={[0.05, 0.08, 0.1]} />
+            <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.2} />
+          </mesh>
+          
+          {/* Candles */}
+          <mesh position={[1, -0.1, 0]}>
+            <cylinderGeometry args={[0.03, 0.03, 0.2]} />
+            <meshStandardMaterial color="#fff8dc" roughness={0.8} />
+          </mesh>
+          
+          {/* Flames */}
+          <mesh position={[1, 0.05, 0]}>
+            <sphereGeometry args={[0.02]} />
+            <meshStandardMaterial 
+              color="#ffa500" 
+              emissive="#ffa500"
+              emissiveIntensity={1.5}
+            />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+};
+
+// Remove the old HangingLamp component since we're using chandelier
 // Smoke Effect Component
 const SmokeEffect = ({ position }: { position: [number, number, number] }) => {
   const smokeRef = useRef<THREE.Group>(null);
@@ -677,6 +690,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <ExecutiveDesk onInteraction={handleInteraction} />
         <LeoTheCat onInteraction={onInteraction} />
         <OfficeWindow />
+        <Chandelier onInteraction={handleInteraction} />
         <ResumeBoards 
           detectiveVision={detectiveVision} 
           onInteraction={handleInteraction} 
