@@ -41,12 +41,6 @@ const OfficeRoom = () => {
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bottom section below window (narrow strip) */}
-      <mesh position={[0, 1.5, -10]}>
-        <planeGeometry args={[14, 3]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.6} />
-      </mesh>
-      
       {/* Front Wall (South) - Wood paneling */}
       <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[20, 10]} />
