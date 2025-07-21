@@ -1,17 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { 
   PerspectiveCamera, 
   PointerLockControls,
-  Environment,
   Text,
   Box,
   Plane,
   Sphere,
-  useTexture,
-  Effects
+  useTexture
 } from '@react-three/drei';
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import woodTexture from '@/assets/wood-texture.jpg';
 import cityscape from '@/assets/noir-cityscape.jpg';
@@ -196,7 +193,6 @@ const ResumeBoards = ({ detectiveVision, onInteraction }: {
             color="#1a1a1a"
             anchorX="center"
             anchorY="middle"
-            font="/fonts/serif-font.woff"
           >
             {board.title}
           </Text>
@@ -363,7 +359,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
     <div className="w-full h-screen bg-noir-shadow">
       <Canvas shadows gl={{ antialias: true, alpha: false }}>
         <PerspectiveCamera makeDefault position={[0, 1.7, 5]} fov={75} />
-        <PointerLockControls />
+        {/* <PointerLockControls /> - Temporarily disabled for debugging */}
         
         <Lighting />
         <OfficeRoom />
@@ -375,18 +371,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <LeoTheCat onInteraction={onInteraction} />
         <OfficeWindow />
         
-        {/* Post-processing effects */}
-        <EffectComposer>
-          <Bloom 
-            intensity={0.5}
-            luminanceThreshold={0.9}
-            luminanceSmoothing={0.9}
-          />
-          <Vignette 
-            offset={0.5}
-            darkness={0.6}
-          />
-        </EffectComposer>
+        {/* Note: Post-processing effects removed temporarily for stability */}
       </Canvas>
 
       {/* Detective Vision Indicator */}

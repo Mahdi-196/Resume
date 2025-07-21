@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { DetectiveOffice } from '@/components/DetectiveOffice';
 import { ResumeOverlay } from '@/components/ResumeOverlay';
+import { DetectiveErrorBoundary } from '@/components/DetectiveErrorBoundary';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +42,9 @@ const Index = () => {
 
   return (
     <div className="w-full h-screen overflow-hidden">
-      <DetectiveOffice onInteraction={handleInteraction} />
+      <DetectiveErrorBoundary>
+        <DetectiveOffice onInteraction={handleInteraction} />
+      </DetectiveErrorBoundary>
       <ResumeOverlay content={activeOverlay} onClose={handleCloseOverlay} />
     </div>
   );
