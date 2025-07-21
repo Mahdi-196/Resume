@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber';
+import { Box, Plane, Sphere } from '@react-three/drei';
 
-// Basic Office Room without textures
+// Testing Drei components step by step
 const OfficeRoom = () => {
   console.log('OfficeRoom rendering...');
   
@@ -52,11 +53,16 @@ const EnhancedScene = () => {
       {/* Office Room */}
       <OfficeRoom />
       
-      {/* Test cube in the room */}
+      {/* Test native Three.js cube */}
       <mesh position={[0, 1, 0]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#8b4513" />
       </mesh>
+      
+      {/* Test Drei Box component */}
+      <Box position={[2, 1, 0]} args={[1, 1, 1]}>
+        <meshStandardMaterial color="#ff0000" />
+      </Box>
     </>
   );
 };
@@ -71,7 +77,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
   return (
     <div className="w-full h-screen bg-noir-shadow">
       <div className="absolute top-4 left-4 text-detective-glow z-10">
-        Testing Room Structure - Step 2
+        Testing Drei Components - Step 3
       </div>
       
       <Canvas camera={{ position: [0, 2, 5], fov: 75 }}>
@@ -80,7 +86,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
 
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm">
-        <p>Testing: Basic room geometry without textures</p>
+        <p>Testing: Drei Box component (should see brown + red cubes)</p>
       </div>
     </div>
   );
