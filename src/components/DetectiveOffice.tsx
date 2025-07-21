@@ -23,30 +23,29 @@ const OfficeRoom = () => {
       </mesh>
 
       {/* Back Wall (North) - Dark wood paneling with window cutout */}
-      {/* Left section of back wall */}
-      <mesh position={[-12, 5, -10]}>
-        <planeGeometry args={[4, 10]} />
+      {/* Left section of back wall (narrow strip) */}
+      <mesh position={[-8.5, 5, -10]}>
+        <planeGeometry args={[3, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Right section of back wall */}
-      <mesh position={[12, 5, -10]}>
-        <planeGeometry args={[4, 10]} />
+      {/* Right section of back wall (narrow strip) */}
+      <mesh position={[8.5, 5, -10]}>
+        <planeGeometry args={[3, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Top section above window */}
-      <mesh position={[0, 8, -10]}>
-        <planeGeometry args={[16, 4]} />
+      {/* Top section above window (narrow strip) */}
+      <mesh position={[0, 7.5, -10]}>
+        <planeGeometry args={[14, 5]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bottom section below window */}
-      <mesh position={[0, 1, -10]}>
-        <planeGeometry args={[16, 2]} />
+      {/* Bottom section below window (narrow strip) */}
+      <mesh position={[0, 1.5, -10]}>
+        <planeGeometry args={[14, 3]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
-      
       
       {/* Front Wall (South) - Wood paneling */}
       <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
@@ -65,6 +64,7 @@ const OfficeRoom = () => {
         <planeGeometry args={[20, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
+      
 
       {/* Ceiling with wooden beams */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10, 0]}>
