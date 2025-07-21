@@ -211,7 +211,7 @@ const OfficeWindow = () => {
   });
 
   return (
-    <group position={[9.5, 4, -2]}> {/* Centered on right wall */}
+    <group position={[8, 5, -9.5]}> {/* Positioned on back wall, to the right of the resume boards */}
       {/* Large Window Frame - 1930s Style Executive Office Window */}
       <mesh position={[-3, 0, 0]}>
         <boxGeometry args={[0.3, 10, 0.4]} />
