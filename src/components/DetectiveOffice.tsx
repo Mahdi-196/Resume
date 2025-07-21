@@ -6,7 +6,7 @@ interface DetectiveOfficeProps {
   onInteraction: (type: string, data?: any) => void;
 }
 
-// Office Room Component - Native Three.js only
+// Complete Office Room with all walls and ceiling
 const OfficeRoom = () => {
   return (
     <group>
@@ -16,19 +16,25 @@ const OfficeRoom = () => {
         <meshStandardMaterial color="#3d2817" roughness={0.8} />
       </mesh>
 
-      {/* Back Wall */}
+      {/* Back Wall (North) */}
       <mesh position={[0, 5, -10]}>
         <planeGeometry args={[20, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.9} />
       </mesh>
       
-      {/* Left Wall */}
+      {/* Front Wall (South) */}
+      <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
+        <planeGeometry args={[20, 10]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.9} />
+      </mesh>
+      
+      {/* Left Wall (West) */}
       <mesh position={[-10, 5, 0]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[20, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.9} />
       </mesh>
       
-      {/* Right Wall */}
+      {/* Right Wall (East) */}
       <mesh position={[10, 5, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <planeGeometry args={[20, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.9} />
@@ -43,7 +49,7 @@ const OfficeRoom = () => {
   );
 };
 
-// Executive Desk Component - Native Three.js only
+// Executive Desk Component
 const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
   return (
     <group position={[0, 0, -3]}>
@@ -71,50 +77,6 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         <meshStandardMaterial color="#2a1810" />
       </mesh>
 
-      {/* Banker's Lamp - Much Bigger and More Prominent */}
-      <group 
-        position={[-1.5, 1.2, 0]}
-        onClick={() => onInteraction('lamp')}
-        onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-        onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-      >
-        {/* Lamp Base */}
-        <mesh position={[0, -0.1, 0]}>
-          <cylinderGeometry args={[0.15, 0.2, 0.2]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
-        </mesh>
-        
-        {/* Lamp Stem */}
-        <mesh position={[0, 0.2, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 0.6]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
-        </mesh>
-        
-        {/* Lamp Shade - Much Larger */}
-        <mesh position={[0, 0.5, 0]}>
-          <cylinderGeometry args={[0.4, 0.3, 0.3]} />
-          <meshStandardMaterial 
-            color="#2d5016" 
-            emissive="#d4af37" 
-            emissiveIntensity={0.3}
-            metalness={0.1}
-            roughness={0.8}
-          />
-        </mesh>
-        
-        {/* Light Bulb - Visible and Glowing */}
-        <mesh position={[0, 0.4, 0]}>
-          <sphereGeometry args={[0.08]} />
-          <meshStandardMaterial 
-            color="#fff8dc" 
-            emissive="#ffd700" 
-            emissiveIntensity={0.8}
-            transparent
-            opacity={0.9}
-          />
-        </mesh>
-      </group>
-
       {/* Typewriter */}
       <group 
         position={[1, 1.15, 0]}
@@ -130,6 +92,74 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
 
       {/* Cigar with Smoke */}
       <SmokeEffect position={[0.5, 1.15, 0.3]} />
+    </group>
+  );
+};
+
+// Hanging Ceiling Lamp Component
+const HangingLamp = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
+  return (
+    <group 
+      position={[0, 8.5, -2]}
+      onClick={() => onInteraction('lamp')}
+      onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
+      onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
+    >
+      {/* Ceiling Mount */}
+      <mesh position={[0, 1.3, 0]}>
+        <cylinderGeometry args={[0.08, 0.08, 0.15]} />
+        <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+      </mesh>
+      
+      {/* Chain Links */}
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={i} position={[0, 1.2 - i * 0.2, 0]}>
+          <torusGeometry args={[0.04, 0.01, 8, 16]} />
+          <meshStandardMaterial color="#8b7355" metalness={0.9} roughness={0.1} />
+        </mesh>
+      ))}
+      
+      {/* Lamp Fixture Top */}
+      <mesh position={[0, 0.3, 0]}>
+        <cylinderGeometry args={[0.12, 0.08, 0.15]} />
+        <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+      </mesh>
+      
+      {/* Large Lamp Shade */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.8, 0.6, 0.6]} />
+        <meshStandardMaterial 
+          color="#2d5016" 
+          emissive="#d4af37" 
+          emissiveIntensity={0.2}
+          metalness={0.1}
+          roughness={0.8}
+        />
+      </mesh>
+      
+      {/* Light Bulb - Large and Prominent */}
+      <mesh position={[0, -0.1, 0]}>
+        <sphereGeometry args={[0.15]} />
+        <meshStandardMaterial 
+          color="#fff8dc" 
+          emissive="#ffd700" 
+          emissiveIntensity={1.0}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+      
+      {/* Inner Light Glow Effect */}
+      <mesh position={[0, -0.3, 0]}>
+        <sphereGeometry args={[0.7]} />
+        <meshStandardMaterial 
+          color="#ffd700" 
+          transparent
+          opacity={0.1}
+          emissive="#ffd700"
+          emissiveIntensity={0.5}
+        />
+      </mesh>
     </group>
   );
 };
@@ -419,28 +449,28 @@ const CameraControls = () => {
   return null;
 };
 
-// Lighting Setup with functional lamp
+// Lighting Setup with functional hanging lamp
 const Lighting = ({ lampOn }: { lampOn: boolean }) => {
   return (
     <>
       {/* Ambient light - Very low when lamp is on */}
       <ambientLight intensity={lampOn ? 0.05 : 0.2} color="#ffd700" />
       
-      {/* Main Desk lamp light - MUCH MORE POWERFUL to light entire room */}
+      {/* Main Hanging lamp light - positioned at lamp location */}
       <pointLight 
-        position={[-1.5, 3, -3]} 
-        intensity={lampOn ? 8 : 0.5}
+        position={[0, 7.5, -2]} 
+        intensity={lampOn ? 10 : 0.5}
         color="#ffd700"
-        distance={25}  // Much larger distance to reach entire room
+        distance={30}  // Much larger distance to reach entire room
         decay={1}      // Less decay so light travels farther
       />
       
       {/* Secondary lamp light for even coverage */}
       <pointLight 
-        position={[-1.5, 2.5, -3]} 
-        intensity={lampOn ? 6 : 0}
+        position={[0, 6, -2]} 
+        intensity={lampOn ? 8 : 0}
         color="#ffeb99"  // Slightly warmer tone
-        distance={30}
+        distance={35}
         decay={1}
       />
       
@@ -453,7 +483,7 @@ const Lighting = ({ lampOn }: { lampOn: boolean }) => {
       
       {/* Ceiling fill light - Only when lamp is off */}
       <pointLight 
-        position={[0, 8, 0]} 
+        position={[0, 9, 0]} 
         intensity={lampOn ? 0 : 0.4}
         color="#ffd700"
         distance={20}
@@ -496,6 +526,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <Lighting lampOn={lampOn} />
         <OfficeRoom />
         <ExecutiveDesk onInteraction={handleInteraction} />
+        <HangingLamp onInteraction={handleInteraction} />
         <ResumeBoards 
           detectiveVision={detectiveVision} 
           onInteraction={onInteraction} 
@@ -513,13 +544,13 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
 
       {/* Lamp Status Indicator */}
       <div className="absolute top-4 right-4 text-detective-glow text-sm">
-        Desk Lamp: {lampOn ? 'ON' : 'OFF'}
+        Hanging Lamp: {lampOn ? 'ON' : 'OFF'}
       </div>
 
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm space-y-1">
         <p>WASD - Move • Mouse - Look Around • Click - Interact</p>
-        <p>Tab - Detective Vision • Click Lamp to Toggle</p>
+        <p>Tab - Detective Vision • Click Hanging Lamp to Toggle</p>
         <p>Click anywhere to enable mouse look</p>
       </div>
     </div>
