@@ -225,7 +225,7 @@ const OfficeWindow = () => {
             
             {/* Building windows */}
             {[...Array(Math.floor(Math.random() * 12) + 8)].map((_, j) => (
-              <mesh key={j} position={[
+              <mesh key={`close-${i}-window-${j}`} position={[
                 (Math.random() - 0.5) * 1.5,
                 (Math.random() - 0.5) * 3,
                 0.41
@@ -249,7 +249,7 @@ const OfficeWindow = () => {
             
             {/* Distant building lights */}
             {[...Array(Math.floor(Math.random() * 6) + 3)].map((_, j) => (
-              <mesh key={j} position={[
+              <mesh key={`distant-${i}-window-${j}`} position={[
                 (Math.random() - 0.5) * 1.2,
                 (Math.random() - 0.5) * 1.8,
                 0.16
