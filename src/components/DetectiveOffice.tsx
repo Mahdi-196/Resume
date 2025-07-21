@@ -215,53 +215,95 @@ const OfficeWindow = () => {
         </>
       ))}
       
-      {/* 1930s City Skyline - Visible through the large window */}
+      {/* High-rise City View - Looking out from tall building */}
       <group position={[0, 0, -1]}>
-        {/* Background Buildings - More prominent view */}
-        {[-6, -4, -2, 0, 2, 4, 6].map((x, i) => (
-          <mesh key={i} position={[x, -1.5 + i * 0.3, 0]}>
-            <boxGeometry args={[1.2, 3 + i * 0.6, 0.2]} />
-            <meshStandardMaterial color="#0a0a0a" roughness={0.9} />
+        {/* Close Buildings at Eye Level */}
+        {[-10, -6, -2, 2, 6, 10].map((x, i) => (
+          <mesh key={`close-${i}`} position={[x, 0.5 + i * 0.2, -0.5]}>
+            <boxGeometry args={[2, 4 + Math.random() * 2, 0.8]} />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
             
-            {/* More prominent window lights */}
-            {[...Array(Math.floor(Math.random() * 8) + 4)].map((_, j) => (
+            {/* Building windows */}
+            {[...Array(Math.floor(Math.random() * 12) + 8)].map((_, j) => (
               <mesh key={j} position={[
-                (Math.random() - 0.5) * 0.8,
-                (Math.random() - 0.5) * (2.5 + i * 0.5),
-                0.1
+                (Math.random() - 0.5) * 1.5,
+                (Math.random() - 0.5) * 3,
+                0.41
               ]}>
-                <planeGeometry args={[0.08, 0.12]} />
+                <planeGeometry args={[0.12, 0.15]} />
                 <meshStandardMaterial 
                   color="#ffa500" 
                   emissive="#ffa500"
-                  emissiveIntensity={1.2}
+                  emissiveIntensity={Math.random() > 0.3 ? 1.0 : 0.2}
                 />
               </mesh>
             ))}
           </mesh>
         ))}
         
-        {/* Prominent Art Deco Building in center */}
-        <mesh position={[0, 1.5, 0]}>
-          <boxGeometry args={[1.5, 5, 0.2]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-          
-          {/* Art Deco spire */}
-          <mesh position={[0, 3, 0]}>
-            <coneGeometry args={[0.4, 2, 4]} />
-            <meshStandardMaterial color="#2a2a2a" roughness={0.7} />
+        {/* Distant Buildings - Lower on horizon */}
+        {[-12, -8, -4, 0, 4, 8, 12].map((x, i) => (
+          <mesh key={`distant-${i}`} position={[x, -1 + i * 0.1, -2]}>
+            <boxGeometry args={[1.5, 2 + Math.random() * 1.5, 0.3]} />
+            <meshStandardMaterial color="#0f0f0f" roughness={0.9} />
+            
+            {/* Distant building lights */}
+            {[...Array(Math.floor(Math.random() * 6) + 3)].map((_, j) => (
+              <mesh key={j} position={[
+                (Math.random() - 0.5) * 1.2,
+                (Math.random() - 0.5) * 1.8,
+                0.16
+              ]}>
+                <planeGeometry args={[0.08, 0.1]} />
+                <meshStandardMaterial 
+                  color="#ffaa00" 
+                  emissive="#ffaa00"
+                  emissiveIntensity={0.8}
+                />
+              </mesh>
+            ))}
           </mesh>
+        ))}
+        
+        {/* Very Distant Skyline */}
+        {[-15, -10, -5, 0, 5, 10, 15].map((x, i) => (
+          <mesh key={`skyline-${i}`} position={[x, -2.5, -4]}>
+            <boxGeometry args={[2, 1 + Math.random() * 0.8, 0.2]} />
+            <meshStandardMaterial color="#050505" roughness={1} />
+          </mesh>
+        ))}
+        
+        {/* Street Level Far Below */}
+        <mesh position={[0, -4, -1]}>
+          <planeGeometry args={[30, 2]} />
+          <meshStandardMaterial 
+            color="#333300"
+            emissive="#333300"
+            emissiveIntensity={0.3}
+            transparent
+            opacity={0.6}
+          />
         </mesh>
         
-        {/* Street Level Glow - More visible */}
-        <mesh position={[0, -3.5, 0]}>
-          <planeGeometry args={[15, 1]} />
+        {/* Street Lights Pattern */}
+        {[-12, -8, -4, 0, 4, 8, 12].map((x, i) => (
+          <mesh key={`street-${i}`} position={[x, -3.8, -0.8]}>
+            <sphereGeometry args={[0.03]} />
+            <meshStandardMaterial 
+              color="#ffff88" 
+              emissive="#ffff88"
+              emissiveIntensity={1.5}
+            />
+          </mesh>
+        ))}
+        
+        {/* Fog/Haze Effect */}
+        <mesh position={[0, -1, -3]}>
+          <planeGeometry args={[25, 3]} />
           <meshStandardMaterial 
-            color="#666600"
-            emissive="#666600"
-            emissiveIntensity={0.5}
+            color="#666666"
             transparent
-            opacity={0.8}
+            opacity={0.1}
           />
         </mesh>
       </group>
