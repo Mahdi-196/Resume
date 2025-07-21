@@ -6,160 +6,73 @@ interface DetectiveOfficeProps {
   onInteraction: (type: string, data?: any) => void;
 }
 
-// Complete Detective Office Room with updated dimensions and specifications
+// Complete Detective Office Room with wood paneling and bookshelves
 const OfficeRoom = () => {
   return (
     <group>
-      {/* Dark, slightly worn hardwood floor - 8x9 dimensions */}
+      {/* Hardwood Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[8, 9]} />
-        <meshStandardMaterial color="#4a2c17" roughness={0.7} metalness={0.05} />
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color="#8b4513" roughness={0.3} metalness={0.1} />
       </mesh>
 
-      {/* Large, ornate Persian rug in center */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, -1]}>
-        <planeGeometry args={[4, 5]} />
-        <meshStandardMaterial 
-          color="#8b0000" 
-          roughness={0.9}
-        />
+      {/* Ornate Rug in center */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, -2]}>
+        <planeGeometry args={[6, 4]} />
+        <meshStandardMaterial color="#8b0000" roughness={0.8} />
       </mesh>
 
-      {/* Persian rug decorative border */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, -1]}>
-        <ringGeometry args={[1.8, 2.5, 32]} />
-        <meshStandardMaterial color="#654321" roughness={0.9} />
-      </mesh>
-
-      {/* Back Wall (North) - Dark wood paneling with integrated bookshelves */}
-      <mesh position={[0, 1.5, -4.5]}>
-        <planeGeometry args={[8, 3]} />
+      {/* Back Wall (North) - Dark wood paneling with window cutout */}
+      {/* Left section of back wall (narrow strip) */}
+      <mesh position={[-8.5, 5, -10]}>
+        <planeGeometry args={[3, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bookshelf sections on back wall */}
-      {[-2.5, -1, 0.5, 2].map((x, i) => (
-        <group key={`back-shelf-${i}`} position={[x, 1.8, -4.4]}>
-          {/* Shelf frame */}
-          <mesh>
-            <boxGeometry args={[1.2, 2.4, 0.15]} />
-            <meshStandardMaterial color="#1a1006" roughness={0.8} />
-          </mesh>
-          {/* Books */}
-          {[0.8, 0.3, -0.2, -0.7].map((y, j) => (
-            <mesh key={j} position={[0, y, 0.08]} rotation={[0, Math.random() * 0.2 - 0.1, 0]}>
-              <boxGeometry args={[0.8, 0.4, 0.05]} />
-              <meshStandardMaterial 
-                color={['#654321', '#8b4513', '#2f1b14', '#5d4037'][j]} 
-                roughness={0.9} 
-              />
-            </mesh>
-          ))}
-        </group>
-      ))}
-      
-      {/* Front Wall (South) - Dark wood paneling with integrated bookshelves */}
-      <mesh position={[0, 1.5, 4.5]} rotation={[0, Math.PI, 0]}>
-        <planeGeometry args={[8, 3]} />
+      {/* Right section of back wall (narrow strip) */}
+      <mesh position={[8.5, 5, -10]}>
+        <planeGeometry args={[3, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bookshelf sections on front wall */}
-      {[-2.5, -1, 0.5, 2].map((x, i) => (
-        <group key={`front-shelf-${i}`} position={[x, 1.8, 4.4]}>
-          <mesh>
-            <boxGeometry args={[1.2, 2.4, 0.15]} />
-            <meshStandardMaterial color="#1a1006" roughness={0.8} />
-          </mesh>
-          {[0.8, 0.3, -0.2, -0.7].map((y, j) => (
-            <mesh key={j} position={[0, y, -0.08]} rotation={[0, Math.random() * 0.2 - 0.1, 0]}>
-              <boxGeometry args={[0.8, 0.4, 0.05]} />
-              <meshStandardMaterial 
-                color={['#8b4513', '#654321', '#5d4037', '#2f1b14'][j]} 
-                roughness={0.9} 
-              />
-            </mesh>
-          ))}
-        </group>
-      ))}
-      
-      {/* Left Wall (West) - Dark wood paneling with integrated bookshelves */}
-      <mesh position={[-4, 1.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <planeGeometry args={[9, 3]} />
+      {/* Top section above window (moved higher) */}
+      <mesh position={[0, 8.5, -10]}>
+        <planeGeometry args={[14, 3]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bookshelf sections on left wall */}
-      {[-3, -1, 1, 3].map((z, i) => (
-        <group key={`left-shelf-${i}`} position={[-3.9, 1.8, z]}>
-          <mesh>
-            <boxGeometry args={[0.15, 2.4, 1.5]} />
-            <meshStandardMaterial color="#1a1006" roughness={0.8} />
-          </mesh>
-          {[0.8, 0.3, -0.2, -0.7].map((y, j) => (
-            <mesh key={j} position={[0.08, y, 0]} rotation={[0, Math.random() * 0.2 - 0.1, 0]}>
-              <boxGeometry args={[0.05, 0.4, 1.2]} />
-              <meshStandardMaterial 
-                color={['#5d4037', '#8b4513', '#654321', '#2f1b14'][j]} 
-                roughness={0.9} 
-              />
-            </mesh>
-          ))}
-        </group>
-      ))}
-      
-      {/* Right Wall (East) - Dark wood paneling with integrated bookshelves */}
-      <mesh position={[4, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]}>
-        <planeGeometry args={[9, 3]} />
+      {/* Front Wall (South) - Wood paneling */}
+      <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
+        <planeGeometry args={[20, 10]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Bookshelf sections on right wall */}
-      {[-3, -1, 1, 3].map((z, i) => (
-        <group key={`right-shelf-${i}`} position={[3.9, 1.8, z]}>
-          <mesh>
-            <boxGeometry args={[0.15, 2.4, 1.5]} />
-            <meshStandardMaterial color="#1a1006" roughness={0.8} />
-          </mesh>
-          {[0.8, 0.3, -0.2, -0.7].map((y, j) => (
-            <mesh key={j} position={[-0.08, y, 0]} rotation={[0, Math.random() * 0.2 - 0.1, 0]}>
-              <boxGeometry args={[0.05, 0.4, 1.2]} />
-              <meshStandardMaterial 
-                color={['#2f1b14', '#5d4037', '#8b4513', '#654321'][j]} 
-                roughness={0.9} 
-              />
-            </mesh>
-          ))}
-        </group>
-      ))}
+      {/* Left Wall (West) - Wood paneling */}
+      <mesh position={[-10, 5, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[20, 10]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
+      </mesh>
+      
+      {/* Right Wall (East) - Wood paneling */}
+      <mesh position={[10, 5, 0]} rotation={[0, -Math.PI / 2, 0]}>
+        <planeGeometry args={[20, 10]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
+      </mesh>
+      
 
-      {/* Simple white plaster ceiling - 8x9 dimensions, height 3 */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 3, 0]}>
-        <planeGeometry args={[8, 9]} />
-        <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+      {/* Ceiling with wooden beams */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10, 0]}>
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color="#1a1006" roughness={0.8} />
       </mesh>
       
-      {/* Crown molding around ceiling perimeter */}
-      {/* Front crown molding */}
-      <mesh position={[0, 2.85, 4.4]}>
-        <boxGeometry args={[8, 0.3, 0.2]} />
-        <meshStandardMaterial color="#e8e8e8" roughness={0.6} />
-      </mesh>
-      {/* Back crown molding */}
-      <mesh position={[0, 2.85, -4.4]}>
-        <boxGeometry args={[8, 0.3, 0.2]} />
-        <meshStandardMaterial color="#e8e8e8" roughness={0.6} />
-      </mesh>
-      {/* Left crown molding */}
-      <mesh position={[-3.9, 2.85, 0]}>
-        <boxGeometry args={[0.2, 0.3, 8.8]} />
-        <meshStandardMaterial color="#e8e8e8" roughness={0.6} />
-      </mesh>
-      {/* Right crown molding */}
-      <mesh position={[3.9, 2.85, 0]}>
-        <boxGeometry args={[0.2, 0.3, 8.8]} />
-        <meshStandardMaterial color="#e8e8e8" roughness={0.6} />
-      </mesh>
+      {/* Wooden ceiling beams */}
+      {[-6, -2, 2, 6].map((z, i) => (
+        <mesh key={i} position={[0, 9.8, z]} rotation={[0, 0, Math.PI / 2]}>
+          <boxGeometry args={[0.2, 20, 0.3]} />
+          <meshStandardMaterial color="#654321" roughness={0.7} />
+        </mesh>
+      ))}
     </group>
   );
 };
@@ -576,64 +489,34 @@ const ResumeBoards = ({ detectiveVision, onInteraction }: {
   );
 };
 
-// Leo the Cat Component with Behavior States
+// Leo the Cat Component
 const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
   const catRef = useRef<THREE.Group>(null);
   const [position, setPosition] = useState<[number, number, number]>([3, 0.3, 2]);
-  const [behavior, setBehavior] = useState<'Wander' | 'SleepOnRug' | 'Groom'>('Wander');
-  const [groomingTime, setGroomingTime] = useState(0);
   
   useFrame((state) => {
     if (catRef.current) {
       // Gentle breathing animation
       catRef.current.scale.y = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
       
-      // Behavior state machine
-      const timeInState = state.clock.elapsedTime % 20; // 20 second cycles
-      
-      if (timeInState < 8) {
-        // Wander behavior (priority 1)
-        if (behavior !== 'Wander') setBehavior('Wander');
-        if (Math.sin(state.clock.elapsedTime * 0.1) > 0.98) {
-          const newX = 3 + Math.sin(state.clock.elapsedTime * 0.05) * 2;
-          const newZ = 2 + Math.cos(state.clock.elapsedTime * 0.05) * 1;
-          setPosition([newX, 0.3, newZ]);
-        }
-      } else if (timeInState < 15) {
-        // SleepOnRug behavior (priority 2)
-        if (behavior !== 'SleepOnRug') setBehavior('SleepOnRug');
-        // Move to rug position gradually
-        const rugPos: [number, number, number] = [0, 0.3, -2];
-        setPosition(prev => [
-          prev[0] + (rugPos[0] - prev[0]) * 0.02,
-          rugPos[1],
-          prev[2] + (rugPos[2] - prev[2]) * 0.02
-        ]);
-        // Curl up slightly when sleeping
-        catRef.current.scale.x = 1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-      } else {
-        // Groom behavior (priority 3)
-        if (behavior !== 'Groom') setBehavior('Groom');
-        setGroomingTime(state.clock.elapsedTime);
-        // Slight head movement for grooming
-        catRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 3) * 0.3;
+      // Occasional movement
+      if (Math.sin(state.clock.elapsedTime * 0.1) > 0.98) {
+        const newX = 3 + Math.sin(state.clock.elapsedTime * 0.05) * 2;
+        const newZ = 2 + Math.cos(state.clock.elapsedTime * 0.05) * 1;
+        setPosition([newX, 0.3, newZ]);
       }
     }
   });
-
-  const handleClick = () => {
-    onInteraction('leo_cat');
-  };
 
   return (
     <group 
       ref={catRef}
       position={position}
-      onClick={handleClick}
+      onClick={() => onInteraction('cat')}
       onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
       onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
     >
-      {/* Tuxedo Cat Body - Black with white chest */}
+      {/* Cat Body */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.3, 8, 6]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
@@ -645,19 +528,9 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
       </mesh>
       
-      {/* White Tuxedo Chest */}
+      {/* White Chest */}
       <mesh position={[0, -0.1, 0.2]}>
         <sphereGeometry args={[0.15, 8, 6]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.8} />
-      </mesh>
-      
-      {/* White Paws */}
-      <mesh position={[-0.15, -0.25, 0.1]}>
-        <sphereGeometry args={[0.05]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.8} />
-      </mesh>
-      <mesh position={[0.15, -0.25, 0.1]}>
-        <sphereGeometry args={[0.05]} />
         <meshStandardMaterial color="#ffffff" roughness={0.8} />
       </mesh>
       
@@ -666,30 +539,6 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
         <boxGeometry args={[0.05, 0.05, 0.8]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
       </mesh>
-      
-      {/* Ears */}
-      <mesh position={[-0.08, 0.25, 0.3]}>
-        <coneGeometry args={[0.04, 0.08]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-      </mesh>
-      <mesh position={[0.08, 0.25, 0.3]}>
-        <coneGeometry args={[0.04, 0.08]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-      </mesh>
-      
-      {/* Behavior indicator (small glow when grooming) */}
-      {behavior === 'Groom' && (
-        <mesh position={[0, 0.4, 0]}>
-          <sphereGeometry args={[0.02]} />
-          <meshStandardMaterial 
-            color="#ffff88"
-            emissive="#ffff88"
-            emissiveIntensity={0.5}
-            transparent
-            opacity={0.6}
-          />
-        </mesh>
-      )}
     </group>
   );
 };
@@ -846,10 +695,6 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
     if (type === 'lamp') {
       setLampOn(prev => !prev);
       console.log('Lamp toggled:', !lampOn);
-    } else if (type === 'leo_cat') {
-      // Show Leo's interaction text
-      console.log("This is Leo. In this world, he's an animation, but in the real world, he's probably sleeping on my desk right now.");
-      onInteraction('leo_cat', "This is Leo. In this world, he's an animation, but in the real world, he's probably sleeping on my desk right now.");
     } else {
       onInteraction(type, data);
     }
