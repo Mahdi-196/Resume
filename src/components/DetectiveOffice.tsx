@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { DetectiveCharacter } from './DetectiveCharacter';
+import { CharacterController, useCharacterController } from './CharacterController';
 
 interface DetectiveOfficeProps {
   onInteraction: (type: string, data?: any) => void;
@@ -816,6 +818,96 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
   );
 };
 
+// Enhanced Detective Office with Character
+const DetectiveOfficeScene = ({ onInteraction }: { onInteraction: (type: string, data?: any) => void }) => {
+  const detectiveRef = useRef<THREE.Group>(null);
+  
+  // Character movement bounds (keep detective within office)
+  const characterBounds = {
+    minX: -8,
+    maxX: 8,
+    minZ: -8,
+    maxZ: 8
+  };
+
+  const characterController = useCharacterController({
+    character: detectiveRef,
+    bounds: characterBounds
+  });
+
+  // Handle floor clicks for detective movement
+  const handleFloorClick = (event: any) => {
+    event.stopPropagation();
+    const clickPosition = new THREE.Vector3(
+      event.point.x,
+      0.1, // Slightly above floor
+      event.point.z
+    );
+    characterController.moveToPosition(clickPosition);
+  };
+
+  return (
+    <>
+      {/* Clickable floor for character movement */}
+      <mesh 
+        rotation={[-Math.PI / 2, 0, 0]} 
+        position={[0, 0.001, 0]}
+        onClick={handleFloorClick}
+        visible={false} // Invisible but clickable
+      >
+        <planeGeometry args={[18, 18]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+
+      {/* All existing office components */}
+      <OfficeRoom />
+      <ExecutiveDesk onInteraction={onInteraction} />
+      <LeoTheCat onInteraction={onInteraction} />
+      <OfficeWindow />
+      <Chandelier onInteraction={onInteraction} />
+      
+      {/* Detective Character */}
+      <DetectiveCharacter 
+        ref={detectiveRef}
+        position={[-2, 0.1, 3]} 
+        onInteraction={onInteraction}
+      />
+      
+      {/* Character Controller */}
+      <CharacterController 
+        character={detectiveRef}
+        bounds={characterBounds}
+      />
+
+      {/* Resume Boards */}
+      <ResumeBoards 
+        detectiveVision={false} // Will be passed from parent
+        onInteraction={onInteraction} 
+      />
+      
+      {/* Keep all existing furniture and decorations */}
+      <Bookshelf position={[-9.5, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
+      <Bookshelf position={[-9.5, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
+      <Bookshelf position={[-9.5, 0, 2]} rotation={[0, Math.PI / 2, 0]} />
+      <Bookshelf position={[-9.5, 0, 6]} rotation={[0, Math.PI / 2, 0]} />
+      
+      <Bookshelf position={[9.5, 0, -6]} rotation={[0, -Math.PI / 2, 0]} />
+      <Bookshelf position={[9.5, 0, -2]} rotation={[0, -Math.PI / 2, 0]} />
+      <Bookshelf position={[9.5, 0, 2]} rotation={[0, -Math.PI / 2, 0]} />
+      <Bookshelf position={[9.5, 0, 6]} rotation={[0, -Math.PI / 2, 0]} />
+      
+      <Fireplace />
+      <VictorianChair position={[-4, 0, 1]} rotation={[0, Math.PI / 4, 0]} />
+      <VictorianChair position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
+      <SideTable position={[-5, 0, 3]} />
+      <SideTable position={[5, 0, 3]} />
+      <CoatRack position={[8, 0, 8]} />
+      <PersianRug position={[-4, 0, 1]} size={[2, 2]} />
+      <PersianRug position={[4, 0, 1]} size={[2, 2]} />
+      <PersianRug position={[0, 0, 5]} size={[3, 2]} />
+    </>
+  );
+};
 
 // Camera Controls Component
 const CameraControls = () => {
@@ -968,6 +1060,9 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
     if (type === 'lamp') {
       setLampOn(prev => !prev);
       console.log('Lamp toggled:', !lampOn);
+    } else if (type === 'detective') {
+      console.log('Detective character clicked');
+      // Add detective interaction logic here
     } else {
       onInteraction(type, data);
     }
@@ -990,45 +1085,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
       <Canvas shadows camera={{ position: [0, 1.7, 5], fov: 75 }}>
         <CameraControls />
         <Lighting lampOn={lampOn} />
-        <OfficeRoom />
-        <ExecutiveDesk onInteraction={handleInteraction} />
-        <LeoTheCat onInteraction={onInteraction} />
-        <OfficeWindow />
-        <Chandelier onInteraction={handleInteraction} />
-        <ResumeBoards 
-          detectiveVision={detectiveVision} 
-          onInteraction={handleInteraction} 
-        />
-        
-        {/* Bookshelves along the walls */}
-        <Bookshelf position={[-9.5, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
-        <Bookshelf position={[-9.5, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
-        <Bookshelf position={[-9.5, 0, 2]} rotation={[0, Math.PI / 2, 0]} />
-        <Bookshelf position={[-9.5, 0, 6]} rotation={[0, Math.PI / 2, 0]} />
-        
-        <Bookshelf position={[9.5, 0, -6]} rotation={[0, -Math.PI / 2, 0]} />
-        <Bookshelf position={[9.5, 0, -2]} rotation={[0, -Math.PI / 2, 0]} />
-        <Bookshelf position={[9.5, 0, 2]} rotation={[0, -Math.PI / 2, 0]} />
-        <Bookshelf position={[9.5, 0, 6]} rotation={[0, -Math.PI / 2, 0]} />
-        
-        {/* Fireplace */}
-        <Fireplace />
-        
-        {/* Victorian Furniture */}
-        <VictorianChair position={[-4, 0, 1]} rotation={[0, Math.PI / 4, 0]} />
-        <VictorianChair position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
-        
-        {/* Side Tables with Detective Items */}
-        <SideTable position={[-5, 0, 3]} />
-        <SideTable position={[5, 0, 3]} />
-        
-        {/* Coat Rack */}
-        <CoatRack position={[8, 0, 8]} />
-        
-        {/* Additional Persian Rugs */}
-        <PersianRug position={[-4, 0, 1]} size={[2, 2]} />
-        <PersianRug position={[4, 0, 1]} size={[2, 2]} />
-        <PersianRug position={[0, 0, 5]} size={[3, 2]} />
+        <DetectiveOfficeScene onInteraction={handleInteraction} />
       </Canvas>
 
       {/* Detective Vision Indicator */}
@@ -1043,10 +1100,10 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         Banker's Lamp: {lampOn ? 'ON' : 'OFF'}
       </div>
 
-      {/* Controls Hint */}
+      {/* Enhanced Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm space-y-1">
         <p>WASD - Move • Mouse - Look Around • Click - Interact</p>
-        <p>Tab - Detective Vision • Click Banker's Lamp to Toggle</p>
+        <p>Tab - Detective Vision • Click Floor - Move Detective</p>
         <p>Click anywhere to enable mouse look</p>
       </div>
     </div>
