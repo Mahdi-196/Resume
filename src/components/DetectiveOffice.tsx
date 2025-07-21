@@ -6,45 +6,84 @@ interface DetectiveOfficeProps {
   onInteraction: (type: string, data?: any) => void;
 }
 
-// Complete Office Room with all walls and ceiling
+// Complete Detective Office Room with wood paneling and bookshelves
 const OfficeRoom = () => {
   return (
     <group>
-      {/* Floor */}
+      {/* Hardwood Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#3d2817" roughness={0.8} />
+        <meshStandardMaterial color="#8b4513" roughness={0.3} metalness={0.1} />
       </mesh>
 
-      {/* Back Wall (North) */}
+      {/* Ornate Rug in center */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, -2]}>
+        <planeGeometry args={[6, 4]} />
+        <meshStandardMaterial color="#8b0000" roughness={0.8} />
+      </mesh>
+
+      {/* Back Wall (North) - Dark wood paneling */}
       <mesh position={[0, 5, -10]}>
         <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.9} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Front Wall (South) */}
+      {/* Built-in Bookshelves on back wall */}
+      {[-7, -4, -1, 2, 5].map((x, i) => (
+        <group key={i} position={[x, 3, -9.8]}>
+          {/* Bookshelf frame */}
+          <mesh position={[0, 0, 0]}>
+            <boxGeometry args={[1.5, 6, 0.3]} />
+            <meshStandardMaterial color="#654321" roughness={0.7} />
+          </mesh>
+          {/* Books */}
+          {[0, 1, 2, 3, 4].map((shelf) => (
+            <group key={shelf} position={[0, 2 - shelf * 1.2, 0.1]}>
+              {[-0.5, -0.2, 0.1, 0.4].map((bookX, bookI) => (
+                <mesh key={bookI} position={[bookX, 0, 0]}>
+                  <boxGeometry args={[0.15, 0.8, 0.05]} />
+                  <meshStandardMaterial 
+                    color={`hsl(${(i + bookI + shelf) * 30}, 40%, ${20 + (bookI * 10)}%)`} 
+                    roughness={0.8} 
+                  />
+                </mesh>
+              ))}
+            </group>
+          ))}
+        </group>
+      ))}
+      
+      {/* Front Wall (South) - Wood paneling */}
       <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.9} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Left Wall (West) */}
+      {/* Left Wall (West) - Wood paneling */}
       <mesh position={[-10, 5, 0]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.9} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Right Wall (East) */}
+      {/* Right Wall (East) - Wood paneling */}
       <mesh position={[10, 5, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.9} />
+        <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
 
-      {/* Ceiling */}
+      {/* Ceiling with wooden beams */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10, 0]}>
         <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#1a1006" roughness={0.9} />
+        <meshStandardMaterial color="#1a1006" roughness={0.8} />
       </mesh>
+      
+      {/* Wooden ceiling beams */}
+      {[-6, -2, 2, 6].map((z, i) => (
+        <mesh key={i} position={[0, 9.8, z]} rotation={[0, 0, Math.PI / 2]}>
+          <boxGeometry args={[0.2, 20, 0.3]} />
+          <meshStandardMaterial color="#654321" roughness={0.7} />
+        </mesh>
+      ))}
     </group>
   );
 };
@@ -77,6 +116,50 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         <meshStandardMaterial color="#2a1810" />
       </mesh>
 
+      {/* Banker's Lamp on Desk */}
+      <group 
+        position={[-1.5, 1.2, 0]}
+        onClick={() => onInteraction('lamp')}
+        onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
+        onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
+      >
+        {/* Lamp Base */}
+        <mesh position={[0, -0.1, 0]}>
+          <cylinderGeometry args={[0.15, 0.2, 0.2]} />
+          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+        </mesh>
+        
+        {/* Lamp Stem */}
+        <mesh position={[0, 0.2, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.6]} />
+          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+        </mesh>
+        
+        {/* Green Banker's Lamp Shade */}
+        <mesh position={[0, 0.5, 0]}>
+          <cylinderGeometry args={[0.4, 0.3, 0.3]} />
+          <meshStandardMaterial 
+            color="#2d5016" 
+            emissive="#d4af37" 
+            emissiveIntensity={0.3}
+            metalness={0.1}
+            roughness={0.8}
+          />
+        </mesh>
+        
+        {/* Light Bulb */}
+        <mesh position={[0, 0.4, 0]}>
+          <sphereGeometry args={[0.08]} />
+          <meshStandardMaterial 
+            color="#fff8dc" 
+            emissive="#ffd700" 
+            emissiveIntensity={0.8}
+            transparent
+            opacity={0.9}
+          />
+        </mesh>
+      </group>
+
       {/* Typewriter */}
       <group 
         position={[1, 1.15, 0]}
@@ -90,80 +173,170 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         </mesh>
       </group>
 
-      {/* Cigar with Smoke */}
-      <SmokeEffect position={[0.5, 1.15, 0.3]} />
-    </group>
-  );
-};
-
-// Hanging Ceiling Lamp Component
-const HangingLamp = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
-  return (
-    <group 
-      position={[0, 8.5, -2]}
-      onClick={() => onInteraction('lamp')}
-      onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-      onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-    >
-      {/* Ceiling Mount */}
-      <mesh position={[0, 1.3, 0]}>
-        <cylinderGeometry args={[0.08, 0.08, 0.15]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
-      </mesh>
-      
-      {/* Chain Links */}
-      {[0, 1, 2, 3].map((i) => (
-        <mesh key={i} position={[0, 1.2 - i * 0.2, 0]}>
-          <torusGeometry args={[0.04, 0.01, 8, 16]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.9} roughness={0.1} />
+      {/* Cigar in Ashtray with continuous smoke */}
+      <group position={[0.5, 1.1, 0.3]}>
+        {/* Ashtray */}
+        <mesh position={[0, 0, 0]}>
+          <cylinderGeometry args={[0.12, 0.1, 0.03]} />
+          <meshStandardMaterial color="#4a4a4a" metalness={0.6} roughness={0.4} />
         </mesh>
-      ))}
-      
-      {/* Lamp Fixture Top */}
-      <mesh position={[0, 0.3, 0]}>
-        <cylinderGeometry args={[0.12, 0.08, 0.15]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+        {/* Cigar */}
+        <mesh position={[0, 0.02, 0]} rotation={[0, 0, 0.3]}>
+          <cylinderGeometry args={[0.01, 0.01, 0.15]} />
+          <meshStandardMaterial color="#8b4513" roughness={0.8} />
+        </mesh>
+        {/* Continuous Smoke Effect */}
+        <SmokeEffect position={[0, 0.05, 0]} />
+      </group>
+    </group>
+  );
+};
+
+// Enhanced Window with Dynamic Cityscape and Animated Rain
+const OfficeWindow = () => {
+  const rainRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (rainRef.current) {
+      // Animate rain falling
+      rainRef.current.children.forEach((child, i) => {
+        const rainDrop = child as THREE.Mesh;
+        rainDrop.position.y -= 0.1;
+        if (rainDrop.position.y < -3) {
+          rainDrop.position.y = 3;
+          rainDrop.position.x = (Math.random() - 0.5) * 4;
+        }
+      });
+    }
+  });
+
+  return (
+    <group position={[8, 4, -8]}>
+      {/* Large Window Frame - 1930s Style */}
+      <mesh position={[-2.5, 0, 0]}>
+        <boxGeometry args={[0.2, 8, 0.3]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      <mesh position={[2.5, 0, 0]}>
+        <boxGeometry args={[0.2, 8, 0.3]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      <mesh position={[0, 4.1, 0]}>
+        <boxGeometry args={[5, 0.2, 0.3]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      <mesh position={[0, -4.1, 0]}>
+        <boxGeometry args={[5, 0.2, 0.3]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
       
-      {/* Large Lamp Shade */}
+      {/* Center Window Mullion */}
       <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.8, 0.6, 0.6]} />
+        <boxGeometry args={[0.1, 8, 0.3]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      
+      {/* Window Glass Panes */}
+      <mesh position={[-1.25, 0, 0.05]}>
+        <planeGeometry args={[2.3, 7.8]} />
         <meshStandardMaterial 
-          color="#2d5016" 
-          emissive="#d4af37" 
-          emissiveIntensity={0.2}
-          metalness={0.1}
-          roughness={0.8}
+          color="#1a1a2e"
+          transparent
+          opacity={0.7}
+        />
+      </mesh>
+      <mesh position={[1.25, 0, 0.05]}>
+        <planeGeometry args={[2.3, 7.8]} />
+        <meshStandardMaterial 
+          color="#1a1a2e"
+          transparent
+          opacity={0.7}
         />
       </mesh>
       
-      {/* Light Bulb - Large and Prominent */}
-      <mesh position={[0, -0.1, 0]}>
-        <sphereGeometry args={[0.15]} />
-        <meshStandardMaterial 
-          color="#fff8dc" 
-          emissive="#ffd700" 
-          emissiveIntensity={1.0}
-          transparent
-          opacity={0.9}
-        />
-      </mesh>
+      {/* 1930s City Skyline - Multiple Building Layers */}
+      <group position={[0, 0, -0.5]}>
+        {/* Background Buildings */}
+        {[-1.5, -0.8, -0.2, 0.4, 1.0, 1.8].map((x, i) => (
+          <mesh key={i} position={[x, -1 + i * 0.3, 0]}>
+            <boxGeometry args={[0.4, 3 + i * 0.5, 0.1]} />
+            <meshStandardMaterial color="#0a0a0a" roughness={0.9} />
+            
+            {/* Sparse warm window lights */}
+            {[...Array(Math.floor(Math.random() * 4) + 2)].map((_, j) => (
+              <mesh key={j} position={[
+                (Math.random() - 0.5) * 0.3,
+                (Math.random() - 0.5) * (2 + i * 0.4),
+                0.05
+              ]}>
+                <planeGeometry args={[0.05, 0.08]} />
+                <meshStandardMaterial 
+                  color="#ffa500" 
+                  emissive="#ffa500"
+                  emissiveIntensity={0.8}
+                />
+              </mesh>
+            ))}
+          </mesh>
+        ))}
+        
+        {/* Art Deco Building Details */}
+        <mesh position={[0, 1, 0]}>
+          <boxGeometry args={[0.6, 4, 0.1]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
+        </mesh>
+        
+        {/* Street Level Glow */}
+        <mesh position={[0, -3.5, 0]}>
+          <planeGeometry args={[4, 0.5]} />
+          <meshStandardMaterial 
+            color="#444400"
+            emissive="#444400"
+            emissiveIntensity={0.3}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+      </group>
       
-      {/* Inner Light Glow Effect */}
-      <mesh position={[0, -0.3, 0]}>
-        <sphereGeometry args={[0.7]} />
+      {/* Animated Rain Streaks */}
+      <group ref={rainRef}>
+        {[...Array(40)].map((_, i) => (
+          <mesh 
+            key={i}
+            position={[
+              (Math.random() - 0.5) * 5,
+              Math.random() * 8 - 4,
+              0.15
+            ]}
+            rotation={[0, 0, -0.1]}
+          >
+            <planeGeometry args={[0.01, 0.3]} />
+            <meshStandardMaterial 
+              color="#87ceeb" 
+              transparent 
+              opacity={0.4}
+              emissive="#87ceeb"
+              emissiveIntensity={0.1}
+            />
+          </mesh>
+        ))}
+      </group>
+      
+      {/* Window Condensation Effect */}
+      <mesh position={[0, -2, 0.1]}>
+        <planeGeometry args={[4.8, 2]} />
         <meshStandardMaterial 
-          color="#ffd700" 
+          color="#ffffff"
           transparent
-          opacity={0.1}
-          emissive="#ffd700"
-          emissiveIntensity={0.5}
+          opacity={0.05}
         />
       </mesh>
     </group>
   );
 };
 
+// Remove the old HangingLamp component since we're using desk lamp
 // Smoke Effect Component
 const SmokeEffect = ({ position }: { position: [number, number, number] }) => {
   const smokeRef = useRef<THREE.Group>(null);
@@ -296,60 +469,6 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
   );
 };
 
-// Window with simple cityscape representation
-const OfficeWindow = () => {
-  return (
-    <group position={[8, 4, -8]}>
-      {/* Window Frame */}
-      <mesh position={[-2.05, 0, 0]}>
-        <boxGeometry args={[0.1, 6, 4]} />
-        <meshStandardMaterial color="#4a3728" />
-      </mesh>
-      <mesh position={[2.05, 0, 0]}>
-        <boxGeometry args={[0.1, 6, 4]} />
-        <meshStandardMaterial color="#4a3728" />
-      </mesh>
-      <mesh position={[0, 3.05, 0]}>
-        <boxGeometry args={[4, 0.1, 4]} />
-        <meshStandardMaterial color="#4a3728" />
-      </mesh>
-      <mesh position={[0, -3.05, 0]}>
-        <boxGeometry args={[4, 0.1, 4]} />
-        <meshStandardMaterial color="#4a3728" />
-      </mesh>
-      
-      {/* Window Glass - dark blue for night cityscape */}
-      <mesh position={[0, 0, 0.05]}>
-        <planeGeometry args={[4, 6]} />
-        <meshStandardMaterial 
-          color="#1a1a3a"
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-      
-      {/* Rain streaks */}
-      {[...Array(20)].map((_, i) => (
-        <mesh 
-          key={i}
-          position={[
-            (Math.random() - 0.5) * 4,
-            (Math.random() - 0.5) * 6,
-            0.1
-          ]}
-          rotation={[0, 0, Math.random() * 0.2 - 0.1]}
-        >
-          <planeGeometry args={[0.02, 0.5]} />
-          <meshStandardMaterial 
-            color="#87ceeb" 
-            transparent 
-            opacity={0.6}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-};
 
 // Camera Controls Component
 const CameraControls = () => {
@@ -449,17 +568,17 @@ const CameraControls = () => {
   return null;
 };
 
-// Lighting Setup with functional hanging lamp
+// Lighting Setup with functional desk lamp
 const Lighting = ({ lampOn }: { lampOn: boolean }) => {
   return (
     <>
       {/* Ambient light - Very low when lamp is on */}
       <ambientLight intensity={lampOn ? 0.05 : 0.2} color="#ffd700" />
       
-      {/* Main Hanging lamp light - positioned at lamp location */}
+      {/* Main Desk lamp light - positioned at banker's lamp location */}
       <pointLight 
-        position={[0, 7.5, -2]} 
-        intensity={lampOn ? 10 : 0.5}
+        position={[-1.5, 3, -3]} 
+        intensity={lampOn ? 12 : 0.5}
         color="#ffd700"
         distance={30}  // Much larger distance to reach entire room
         decay={1}      // Less decay so light travels farther
@@ -526,7 +645,6 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <Lighting lampOn={lampOn} />
         <OfficeRoom />
         <ExecutiveDesk onInteraction={handleInteraction} />
-        <HangingLamp onInteraction={handleInteraction} />
         <ResumeBoards 
           detectiveVision={detectiveVision} 
           onInteraction={onInteraction} 
@@ -544,13 +662,13 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
 
       {/* Lamp Status Indicator */}
       <div className="absolute top-4 right-4 text-detective-glow text-sm">
-        Hanging Lamp: {lampOn ? 'ON' : 'OFF'}
+        Banker's Lamp: {lampOn ? 'ON' : 'OFF'}
       </div>
 
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm space-y-1">
         <p>WASD - Move • Mouse - Look Around • Click - Interact</p>
-        <p>Tab - Detective Vision • Click Hanging Lamp to Toggle</p>
+        <p>Tab - Detective Vision • Click Banker's Lamp to Toggle</p>
         <p>Click anywhere to enable mouse look</p>
       </div>
     </div>
