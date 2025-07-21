@@ -28,30 +28,6 @@ const OfficeRoom = () => {
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Built-in Bookshelves on back wall */}
-      {[-7, -4, -1, 2, 5].map((x, i) => (
-        <group key={i} position={[x, 3, -9.8]}>
-          {/* Bookshelf frame */}
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[1.5, 6, 0.3]} />
-            <meshStandardMaterial color="#654321" roughness={0.7} />
-          </mesh>
-          {/* Books */}
-          {[0, 1, 2, 3, 4].map((shelf) => (
-            <group key={shelf} position={[0, 2 - shelf * 1.2, 0.1]}>
-              {[-0.5, -0.2, 0.1, 0.4].map((bookX, bookI) => (
-                <mesh key={bookI} position={[bookX, 0, 0]}>
-                  <boxGeometry args={[0.15, 0.8, 0.05]} />
-                  <meshStandardMaterial 
-                    color={`hsl(${(i + bookI + shelf) * 30}, 40%, ${20 + (bookI * 10)}%)`} 
-                    roughness={0.8} 
-                  />
-                </mesh>
-              ))}
-            </group>
-          ))}
-        </group>
-      ))}
       
       {/* Front Wall (South) - Wood paneling */}
       <mesh position={[0, 5, 10]} rotation={[0, Math.PI, 0]}>
