@@ -35,9 +35,9 @@ const OfficeRoom = () => {
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
-      {/* Top section above window (narrow strip) */}
-      <mesh position={[0, 7.5, -10]}>
-        <planeGeometry args={[14, 5]} />
+      {/* Top section above window (moved higher) */}
+      <mesh position={[0, 8.5, -10]}>
+        <planeGeometry args={[14, 3]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
