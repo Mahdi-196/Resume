@@ -1,15 +1,16 @@
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, forwardRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface DetectiveCharacterProps {
   position: [number, number, number];
-  onInteraction: (type: string) => void;
+  onInteraction: (type: string, data?: any) => void;
 }
 
-export const DetectiveCharacter = ({ position, onInteraction }: DetectiveCharacterProps) => {
+export const DetectiveCharacter = forwardRef<THREE.Group, DetectiveCharacterProps>(
+  ({ position, onInteraction }, ref) => {
   const groupRef = useRef<THREE.Group>(null);
   const [isWalking, setIsWalking] = useState(false);
   const [rotationY, setRotationY] = useState(0);
@@ -17,18 +18,17 @@ export const DetectiveCharacter = ({ position, onInteraction }: DetectiveCharact
   // For now, we'll create a placeholder low-poly detective character
   // This will be replaced with the actual GLTF model once downloaded
   const DetectivePlaceholder = () => {
-    const meshRef = useRef<THREE.Group>(null);
     
     useFrame((state) => {
-      if (meshRef.current && isWalking) {
+      if (ref && 'current' in ref && ref.current && isWalking) {
         // Simple walking animation - bob up and down
-        meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 4) * 0.05;
+        ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 4) * 0.05;
       }
     });
 
     return (
       <group 
-        ref={meshRef}
+        ref={ref}
         position={position}
         rotation={[0, rotationY, 0]}
         onClick={() => onInteraction('detective')}
@@ -132,7 +132,7 @@ export const DetectiveCharacter = ({ position, onInteraction }: DetectiveCharact
   }, []);
 
   return <DetectivePlaceholder />;
-};
+});
 
 // Hook for model loading (ready for GLTF integration)
 export const useDetectiveModel = (modelPath: string) => {
