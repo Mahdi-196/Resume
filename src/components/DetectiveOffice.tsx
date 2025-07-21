@@ -71,20 +71,47 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         <meshStandardMaterial color="#2a1810" />
       </mesh>
 
-      {/* Banker's Lamp */}
+      {/* Banker's Lamp - Much Bigger and More Prominent */}
       <group 
         position={[-1.5, 1.2, 0]}
         onClick={() => onInteraction('lamp')}
         onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
         onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
       >
-        <mesh position={[0, 0.3, 0]}>
-          <sphereGeometry args={[0.1]} />
-          <meshStandardMaterial color="#d4af37" emissive="#8b7355" emissiveIntensity={0.5} />
+        {/* Lamp Base */}
+        <mesh position={[0, -0.1, 0]}>
+          <cylinderGeometry args={[0.15, 0.2, 0.2]} />
+          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
         </mesh>
-        <mesh position={[0, 0.1, 0]}>
-          <boxGeometry args={[0.02, 0.4, 0.02]} />
-          <meshStandardMaterial color="#8b7355" metalness={0.8} />
+        
+        {/* Lamp Stem */}
+        <mesh position={[0, 0.2, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.6]} />
+          <meshStandardMaterial color="#8b7355" metalness={0.8} roughness={0.2} />
+        </mesh>
+        
+        {/* Lamp Shade - Much Larger */}
+        <mesh position={[0, 0.5, 0]}>
+          <cylinderGeometry args={[0.4, 0.3, 0.3]} />
+          <meshStandardMaterial 
+            color="#2d5016" 
+            emissive="#d4af37" 
+            emissiveIntensity={0.3}
+            metalness={0.1}
+            roughness={0.8}
+          />
+        </mesh>
+        
+        {/* Light Bulb - Visible and Glowing */}
+        <mesh position={[0, 0.4, 0]}>
+          <sphereGeometry args={[0.08]} />
+          <meshStandardMaterial 
+            color="#fff8dc" 
+            emissive="#ffd700" 
+            emissiveIntensity={0.8}
+            transparent
+            opacity={0.9}
+          />
         </mesh>
       </group>
 
@@ -396,31 +423,40 @@ const CameraControls = () => {
 const Lighting = ({ lampOn }: { lampOn: boolean }) => {
   return (
     <>
-      {/* Ambient light */}
-      <ambientLight intensity={0.1} color="#ffd700" />
+      {/* Ambient light - Very low when lamp is on */}
+      <ambientLight intensity={lampOn ? 0.05 : 0.2} color="#ffd700" />
       
-      {/* Desk lamp light - toggleable */}
+      {/* Main Desk lamp light - MUCH MORE POWERFUL to light entire room */}
       <pointLight 
-        position={[-1.5, 2, -3]} 
-        intensity={lampOn ? 2 : 0.5}
+        position={[-1.5, 3, -3]} 
+        intensity={lampOn ? 8 : 0.5}
         color="#ffd700"
-        distance={8}
-        decay={2}
+        distance={25}  // Much larger distance to reach entire room
+        decay={1}      // Less decay so light travels farther
       />
       
-      {/* Window light */}
+      {/* Secondary lamp light for even coverage */}
+      <pointLight 
+        position={[-1.5, 2.5, -3]} 
+        intensity={lampOn ? 6 : 0}
+        color="#ffeb99"  // Slightly warmer tone
+        distance={30}
+        decay={1}
+      />
+      
+      {/* Window light - Dimmer when lamp is on */}
       <directionalLight 
         position={[10, 8, -5]} 
-        intensity={0.3}
+        intensity={lampOn ? 0.1 : 0.3}
         color="#87ceeb"
       />
       
-      {/* Soft fill light */}
+      {/* Ceiling fill light - Only when lamp is off */}
       <pointLight 
         position={[0, 8, 0]} 
-        intensity={0.2}
+        intensity={lampOn ? 0 : 0.4}
         color="#ffd700"
-        distance={15}
+        distance={20}
         decay={2}
       />
     </>
