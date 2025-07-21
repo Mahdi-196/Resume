@@ -192,7 +192,7 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
   );
 };
 
-// Enhanced Window with Dynamic Cityscape and Animated Rain - Centered on Right Wall
+// Enhanced Window with Dynamic Cityscape and Animated Rain - Centered on back wall
 const OfficeWindow = () => {
   const rainRef = useRef<THREE.Group>(null);
   
@@ -202,69 +202,77 @@ const OfficeWindow = () => {
       rainRef.current.children.forEach((child, i) => {
         const rainDrop = child as THREE.Mesh;
         rainDrop.position.y -= 0.15;
-        if (rainDrop.position.y < -4) {
-          rainDrop.position.y = 4;
-          rainDrop.position.x = (Math.random() - 0.5) * 6;
+        if (rainDrop.position.y < -3) {
+          rainDrop.position.y = 3;
+          rainDrop.position.x = (Math.random() - 0.5) * 14;
         }
       });
     }
   });
 
   return (
-    <group position={[0, 5, -9.5]}> {/* Centered on back wall behind the resume boards */}
-      {/* Large Window Frame - 1930s Style Executive Office Window */}
-      <mesh position={[-3, 0, 0]}>
-        <boxGeometry args={[0.3, 10, 0.4]} />
+    <group position={[0, 2.5, -9.5]}> {/* Centered on back wall, lower position */}
+      {/* Large Window Frame - 80% of wall width, shorter height */}
+      <mesh position={[-7.8, 0, 0]}>
+        <boxGeometry args={[0.3, 6, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
-      <mesh position={[3, 0, 0]}>
-        <boxGeometry args={[0.3, 10, 0.4]} />
+      <mesh position={[7.8, 0, 0]}>
+        <boxGeometry args={[0.3, 6, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
-      <mesh position={[0, 5.2, 0]}>
-        <boxGeometry args={[6, 0.3, 0.4]} />
+      <mesh position={[0, 3.2, 0]}>
+        <boxGeometry args={[15.6, 0.3, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
-      <mesh position={[0, -5.2, 0]}>
-        <boxGeometry args={[6, 0.3, 0.4]} />
+      <mesh position={[0, -3.2, 0]}>
+        <boxGeometry args={[15.6, 0.3, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
       
       {/* Window Mullions - Classic Office Style */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[0.15, 10, 0.4]} />
+        <boxGeometry args={[0.15, 6, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
-      <mesh position={[0, 2.5, 0]}>
-        <boxGeometry args={[6, 0.15, 0.4]} />
+      <mesh position={[-3.9, 0, 0]}>
+        <boxGeometry args={[0.15, 6, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
-      <mesh position={[0, -2.5, 0]}>
-        <boxGeometry args={[6, 0.15, 0.4]} />
+      <mesh position={[3.9, 0, 0]}>
+        <boxGeometry args={[0.15, 6, 0.4]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      <mesh position={[0, 1.6, 0]}>
+        <boxGeometry args={[15.6, 0.15, 0.4]} />
+        <meshStandardMaterial color="#4a3728" roughness={0.7} />
+      </mesh>
+      <mesh position={[0, -1.6, 0]}>
+        <boxGeometry args={[15.6, 0.15, 0.4]} />
         <meshStandardMaterial color="#4a3728" roughness={0.7} />
       </mesh>
       
-      {/* Window Glass Panes - 6 total panes like a real office window */}
-      {[-1.5, 1.5].map((x, i) => (
+      {/* Window Glass Panes - 6 panes across 2 rows */}
+      {[-5.85, -1.95, 1.95, 5.85].map((x, i) => (
         <>
-          <mesh key={`top-${i}`} position={[x, 3.75, 0.05]}>
-            <planeGeometry args={[2.7, 2.3]} />
+          <mesh key={`top-${i}`} position={[x, 2.4, 0.05]}>
+            <planeGeometry args={[3.6, 1.4]} />
             <meshStandardMaterial 
               color="#1a1a2e"
               transparent
               opacity={0.6}
             />
           </mesh>
-          <mesh key={`middle-${i}`} position={[x, 1.25, 0.05]}>
-            <planeGeometry args={[2.7, 2.3]} />
+          <mesh key={`bottom-${i}`} position={[x, 0.8, 0.05]}>
+            <planeGeometry args={[3.6, 1.4]} />
             <meshStandardMaterial 
               color="#1a1a2e"
               transparent
               opacity={0.6}
             />
           </mesh>
-          <mesh key={`bottom-${i}`} position={[x, -1.25, 0.05]}>
-            <planeGeometry args={[2.7, 2.3]} />
+          <mesh key={`lower-${i}`} position={[x, -0.8, 0.05]}>
+            <planeGeometry args={[3.6, 1.4]} />
             <meshStandardMaterial 
               color="#1a1a2e"
               transparent
@@ -277,16 +285,16 @@ const OfficeWindow = () => {
       {/* 1930s City Skyline - Visible through the large window */}
       <group position={[0, 0, -1]}>
         {/* Background Buildings - More prominent view */}
-        {[-2.5, -1.5, -0.5, 0.5, 1.5, 2.5].map((x, i) => (
-          <mesh key={i} position={[x, -2 + i * 0.4, 0]}>
-            <boxGeometry args={[0.6, 4 + i * 0.8, 0.2]} />
+        {[-6, -4, -2, 0, 2, 4, 6].map((x, i) => (
+          <mesh key={i} position={[x, -1.5 + i * 0.3, 0]}>
+            <boxGeometry args={[1.2, 3 + i * 0.6, 0.2]} />
             <meshStandardMaterial color="#0a0a0a" roughness={0.9} />
             
             {/* More prominent window lights */}
-            {[...Array(Math.floor(Math.random() * 6) + 3)].map((_, j) => (
+            {[...Array(Math.floor(Math.random() * 8) + 4)].map((_, j) => (
               <mesh key={j} position={[
-                (Math.random() - 0.5) * 0.4,
-                (Math.random() - 0.5) * (3 + i * 0.6),
+                (Math.random() - 0.5) * 0.8,
+                (Math.random() - 0.5) * (2.5 + i * 0.5),
                 0.1
               ]}>
                 <planeGeometry args={[0.08, 0.12]} />
@@ -301,20 +309,20 @@ const OfficeWindow = () => {
         ))}
         
         {/* Prominent Art Deco Building in center */}
-        <mesh position={[0, 2, 0]}>
-          <boxGeometry args={[1, 6, 0.2]} />
+        <mesh position={[0, 1.5, 0]}>
+          <boxGeometry args={[1.5, 5, 0.2]} />
           <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
           
           {/* Art Deco spire */}
-          <mesh position={[0, 3.5, 0]}>
-            <coneGeometry args={[0.3, 1.5, 4]} />
+          <mesh position={[0, 3, 0]}>
+            <coneGeometry args={[0.4, 2, 4]} />
             <meshStandardMaterial color="#2a2a2a" roughness={0.7} />
           </mesh>
         </mesh>
         
         {/* Street Level Glow - More visible */}
-        <mesh position={[0, -4.5, 0]}>
-          <planeGeometry args={[6, 1]} />
+        <mesh position={[0, -3.5, 0]}>
+          <planeGeometry args={[15, 1]} />
           <meshStandardMaterial 
             color="#666600"
             emissive="#666600"
@@ -327,12 +335,12 @@ const OfficeWindow = () => {
       
       {/* Animated Rain Streaks - More prominent */}
       <group ref={rainRef}>
-        {[...Array(60)].map((_, i) => (
+        {[...Array(80)].map((_, i) => (
           <mesh 
             key={i}
             position={[
-              (Math.random() - 0.5) * 6,
-              Math.random() * 10 - 5,
+              (Math.random() - 0.5) * 14,
+              Math.random() * 6 - 3,
               0.2
             ]}
             rotation={[0, 0, -0.2]}
@@ -350,8 +358,8 @@ const OfficeWindow = () => {
       </group>
       
       {/* Window Sill */}
-      <mesh position={[0, -5.5, -0.1]}>
-        <boxGeometry args={[6.5, 0.3, 0.6]} />
+      <mesh position={[0, -3.5, -0.1]}>
+        <boxGeometry args={[16, 0.3, 0.6]} />
         <meshStandardMaterial color="#4a3728" roughness={0.6} />
       </mesh>
     </group>
@@ -385,57 +393,7 @@ const SmokeEffect = ({ position }: { position: [number, number, number] }) => {
   );
 };
 
-// Resume Display Boards
-const ResumeBoards = ({ detectiveVision, onInteraction }: { 
-  detectiveVision: boolean;
-  onInteraction: (type: string, data: string) => void;
-}) => {
-  const boards = [
-    { title: 'ABOUT ME', position: [-6, 2, -8] as [number, number, number], content: 'about' },
-    { title: 'SKILLS', position: [0, 2, -8] as [number, number, number], content: 'skills' },
-    { title: 'RESUME', position: [6, 2, -8] as [number, number, number], content: 'resume' }
-  ];
-
-  return (
-    <>
-      {boards.map((board, index) => (
-        <group 
-          key={board.content}
-          position={board.position}
-          onClick={() => onInteraction('board', board.content)}
-          onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-          onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-        >
-          {/* Easel */}
-          <mesh position={[-0.8, -0.5, 0]}>
-            <boxGeometry args={[0.05, 3, 0.05]} />
-            <meshStandardMaterial color="#8b4513" />
-          </mesh>
-          <mesh position={[0.8, -0.5, 0]}>
-            <boxGeometry args={[0.05, 3, 0.05]} />
-            <meshStandardMaterial color="#8b4513" />
-          </mesh>
-          
-          {/* Display Board */}
-          <mesh position={[0, 0, 0.1]}>
-            <planeGeometry args={[2, 1.5]} />
-            <meshStandardMaterial 
-              color={detectiveVision ? "#ffffff" : "#f5f5dc"}
-              emissive={detectiveVision ? "#ffffff" : "#000000"}
-              emissiveIntensity={detectiveVision ? 0.3 : 0}
-            />
-          </mesh>
-
-          {/* Simple text representation */}
-          <mesh position={[0, 0.5, 0.2]}>
-            <boxGeometry args={[1.5, 0.1, 0.01]} />
-            <meshStandardMaterial color="#1a1a1a" />
-          </mesh>
-        </group>
-      ))}
-    </>
-  );
-};
+// Resume Display Boards - Removed as per user request
 
 // Leo the Cat Component
 const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
@@ -667,10 +625,6 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <Lighting lampOn={lampOn} />
         <OfficeRoom />
         <ExecutiveDesk onInteraction={handleInteraction} />
-        <ResumeBoards 
-          detectiveVision={detectiveVision} 
-          onInteraction={onInteraction} 
-        />
         <LeoTheCat onInteraction={onInteraction} />
         <OfficeWindow />
       </Canvas>
