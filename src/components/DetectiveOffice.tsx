@@ -22,7 +22,7 @@ const OfficeRoom = () => {
         <meshStandardMaterial color="#8b0000" roughness={0.8} />
       </mesh>
 
-      {/* Back Wall (North) - Dark wood paneling with window cutout */}
+      {/* Back Wall (North) - Dark wood paneling with full window opening */}
       {/* Left section of back wall */}
       <mesh position={[-6, 5, -10]}>
         <planeGeometry args={[8, 10]} />
@@ -32,18 +32,6 @@ const OfficeRoom = () => {
       {/* Right section of back wall */}
       <mesh position={[6, 5, -10]}>
         <planeGeometry args={[8, 10]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.6} />
-      </mesh>
-      
-      {/* Top section above window */}
-      <mesh position={[0, 7, -10]}>
-        <planeGeometry args={[4, 6]} />
-        <meshStandardMaterial color="#2a1810" roughness={0.6} />
-      </mesh>
-      
-      {/* Bottom section below window */}
-      <mesh position={[0, 1, -10]}>
-        <planeGeometry args={[4, 2]} />
         <meshStandardMaterial color="#2a1810" roughness={0.6} />
       </mesh>
       
