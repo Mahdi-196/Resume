@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface DetectiveOfficeProps {
@@ -294,17 +294,115 @@ const OfficeWindow = () => {
   );
 };
 
-// Lighting Setup
-const Lighting = () => {
+// Camera Controls Component
+const CameraControls = () => {
+  const { camera, gl } = useThree();
+  const moveState = useRef({
+    forward: false,
+    backward: false,
+    left: false,
+    right: false
+  });
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.code) {
+        case 'KeyW':
+          moveState.current.forward = true;
+          break;
+        case 'KeyS':
+          moveState.current.backward = true;
+          break;
+        case 'KeyA':
+          moveState.current.left = true;
+          break;
+        case 'KeyD':
+          moveState.current.right = true;
+          break;
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      switch (event.code) {
+        case 'KeyW':
+          moveState.current.forward = false;
+          break;
+        case 'KeyS':
+          moveState.current.backward = false;
+          break;
+        case 'KeyA':
+          moveState.current.left = false;
+          break;
+        case 'KeyD':
+          moveState.current.right = false;
+          break;
+      }
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      if (document.pointerLockElement === gl.domElement) {
+        const sensitivity = 0.002;
+        camera.rotation.y -= event.movementX * sensitivity;
+        camera.rotation.x -= event.movementY * sensitivity;
+        
+        // Clamp vertical rotation
+        camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+      }
+    };
+
+    const handleClick = () => {
+      gl.domElement.requestPointerLock();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    gl.domElement.addEventListener('mousemove', handleMouseMove);
+    gl.domElement.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      gl.domElement.removeEventListener('mousemove', handleMouseMove);
+      gl.domElement.removeEventListener('click', handleClick);
+    };
+  }, [camera, gl]);
+
+  useFrame(() => {
+    const speed = 0.1;
+    const direction = new THREE.Vector3();
+    
+    if (moveState.current.forward) {
+      direction.z -= speed;
+    }
+    if (moveState.current.backward) {
+      direction.z += speed;
+    }
+    if (moveState.current.left) {
+      direction.x -= speed;
+    }
+    if (moveState.current.right) {
+      direction.x += speed;
+    }
+
+    // Apply rotation to movement direction
+    direction.applyEuler(camera.rotation);
+    camera.position.add(direction);
+  });
+
+  return null;
+};
+
+// Lighting Setup with functional lamp
+const Lighting = ({ lampOn }: { lampOn: boolean }) => {
   return (
     <>
       {/* Ambient light */}
       <ambientLight intensity={0.1} color="#ffd700" />
       
-      {/* Desk lamp light */}
+      {/* Desk lamp light - toggleable */}
       <pointLight 
         position={[-1.5, 2, -3]} 
-        intensity={1}
+        intensity={lampOn ? 2 : 0.5}
         color="#ffd700"
         distance={8}
         decay={2}
@@ -332,6 +430,16 @@ const Lighting = () => {
 // Main Detective Office Component
 export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
   const [detectiveVision, setDetectiveVision] = useState(false);
+  const [lampOn, setLampOn] = useState(true);
+
+  const handleInteraction = (type: string, data?: any) => {
+    if (type === 'lamp') {
+      setLampOn(prev => !prev);
+      console.log('Lamp toggled:', !lampOn);
+    } else {
+      onInteraction(type, data);
+    }
+  };
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -348,10 +456,10 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
   return (
     <div className="w-full h-screen bg-noir-shadow">
       <Canvas shadows camera={{ position: [0, 1.7, 5], fov: 75 }}>
-        
-        <Lighting />
+        <CameraControls />
+        <Lighting lampOn={lampOn} />
         <OfficeRoom />
-        <ExecutiveDesk onInteraction={onInteraction} />
+        <ExecutiveDesk onInteraction={handleInteraction} />
         <ResumeBoards 
           detectiveVision={detectiveVision} 
           onInteraction={onInteraction} 
@@ -367,10 +475,16 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         </div>
       )}
 
+      {/* Lamp Status Indicator */}
+      <div className="absolute top-4 right-4 text-detective-glow text-sm">
+        Desk Lamp: {lampOn ? 'ON' : 'OFF'}
+      </div>
+
       {/* Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm space-y-1">
-        <p>Mouse - Look Around • Click - Interact</p>
-        <p>Tab - Detective Vision</p>
+        <p>WASD - Move • Mouse - Look Around • Click - Interact</p>
+        <p>Tab - Detective Vision • Click Lamp to Toggle</p>
+        <p>Click anywhere to enable mouse look</p>
       </div>
     </div>
   );
