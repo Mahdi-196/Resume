@@ -489,6 +489,279 @@ const ResumeBoards = ({ detectiveVision, onInteraction }: {
   );
 };
 
+// Bookshelf Component - Victorian Style
+const Bookshelf = ({ position, rotation = [0, 0, 0] }: { 
+  position: [number, number, number]; 
+  rotation?: [number, number, number] 
+}) => {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Main bookshelf frame */}
+      <mesh position={[0, 2.5, 0]}>
+        <boxGeometry args={[0.3, 5, 2]} />
+        <meshStandardMaterial color="#654321" roughness={0.7} />
+      </mesh>
+      
+      {/* Shelves */}
+      {[0.5, 1.5, 2.5, 3.5, 4.5].map((y, i) => (
+        <mesh key={`shelf-${i}`} position={[0, y, 0]}>
+          <boxGeometry args={[0.25, 0.05, 1.9]} />
+          <meshStandardMaterial color="#8b4513" roughness={0.6} />
+        </mesh>
+      ))}
+      
+      {/* Books */}
+      {[0.75, 1.75, 2.75, 3.75].map((y, shelfIndex) => (
+        <group key={`books-${shelfIndex}`}>
+          {[...Array(12)].map((_, bookIndex) => (
+            <mesh key={`book-${shelfIndex}-${bookIndex}`} position={[
+              0.1,
+              y + 0.1,
+              -0.8 + (bookIndex * 0.15)
+            ]}>
+              <boxGeometry args={[0.05, 0.2, 0.12]} />
+              <meshStandardMaterial 
+                color={[
+                  "#8b0000", "#2e8b57", "#4b0082", "#800080", 
+                  "#008b8b", "#b8860b", "#8b4513", "#2f4f4f"
+                ][bookIndex % 8]} 
+                roughness={0.8} 
+              />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+};
+
+// Fireplace Component
+const Fireplace = () => {
+  const fireRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (fireRef.current) {
+      fireRef.current.children.forEach((child, i) => {
+        if (child instanceof THREE.Mesh) {
+          child.scale.y = 1 + Math.sin(state.clock.elapsedTime * 3 + i) * 0.1;
+          child.scale.x = 1 + Math.sin(state.clock.elapsedTime * 2 + i * 0.5) * 0.05;
+        }
+      });
+    }
+  });
+
+  return (
+    <group position={[-8, 0, 0]}>
+      {/* Fireplace Frame */}
+      <mesh position={[0, 2, 0]}>
+        <boxGeometry args={[0.3, 4, 2]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.7} />
+      </mesh>
+      
+      {/* Mantelpiece */}
+      <mesh position={[0.1, 3.8, 0]}>
+        <boxGeometry args={[0.4, 0.2, 2.5]} />
+        <meshStandardMaterial color="#654321" roughness={0.6} />
+      </mesh>
+      
+      {/* Fire Opening */}
+      <mesh position={[0.05, 1.5, 0]}>
+        <boxGeometry args={[0.1, 2, 1.5]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+      
+      {/* Fire Logs */}
+      <mesh position={[0.1, 0.6, 0]} rotation={[0, 0, 0.2]}>
+        <cylinderGeometry args={[0.08, 0.08, 1]} />
+        <meshStandardMaterial color="#654321" roughness={0.9} />
+      </mesh>
+      <mesh position={[0.1, 0.7, 0.3]} rotation={[0, 0.5, 0.3]}>
+        <cylinderGeometry args={[0.06, 0.06, 0.8]} />
+        <meshStandardMaterial color="#8b4513" roughness={0.9} />
+      </mesh>
+      
+      {/* Fire Effect */}
+      <group ref={fireRef} position={[0.12, 1.2, 0]}>
+        {[...Array(6)].map((_, i) => (
+          <mesh key={i} position={[0, i * 0.1, (Math.random() - 0.5) * 0.3]}>
+            <coneGeometry args={[0.05 + i * 0.01, 0.2 + i * 0.05]} />
+            <meshStandardMaterial 
+              color={i < 2 ? "#ff4500" : i < 4 ? "#ffa500" : "#ffff00"}
+              emissive={i < 2 ? "#ff4500" : i < 4 ? "#ffa500" : "#ffff00"}
+              emissiveIntensity={0.8}
+              transparent
+              opacity={0.7}
+            />
+          </mesh>
+        ))}
+      </group>
+      
+      {/* Mantel Decorations */}
+      {/* Clock */}
+      <mesh position={[0.2, 4, 0]}>
+        <cylinderGeometry args={[0.15, 0.15, 0.1]} />
+        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
+      </mesh>
+      
+      {/* Candlesticks */}
+      <mesh position={[0.2, 4, 0.8]}>
+        <cylinderGeometry args={[0.03, 0.05, 0.3]} />
+        <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <mesh position={[0.2, 4, -0.8]}>
+        <cylinderGeometry args={[0.03, 0.05, 0.3]} />
+        <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
+      </mesh>
+    </group>
+  );
+};
+
+// Victorian Armchair
+const VictorianChair = ({ position, rotation = [0, 0, 0] }: { 
+  position: [number, number, number]; 
+  rotation?: [number, number, number] 
+}) => {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Seat */}
+      <mesh position={[0, 0.5, 0]}>
+        <boxGeometry args={[0.8, 0.1, 0.8]} />
+        <meshStandardMaterial color="#8b0000" roughness={0.9} />
+      </mesh>
+      
+      {/* Backrest */}
+      <mesh position={[0, 1.2, -0.35]}>
+        <boxGeometry args={[0.8, 1.4, 0.1]} />
+        <meshStandardMaterial color="#8b0000" roughness={0.9} />
+      </mesh>
+      
+      {/* Armrests */}
+      <mesh position={[-0.35, 0.9, 0]}>
+        <boxGeometry args={[0.1, 0.8, 0.6]} />
+        <meshStandardMaterial color="#654321" roughness={0.7} />
+      </mesh>
+      <mesh position={[0.35, 0.9, 0]}>
+        <boxGeometry args={[0.1, 0.8, 0.6]} />
+        <meshStandardMaterial color="#654321" roughness={0.7} />
+      </mesh>
+      
+      {/* Legs */}
+      {[[-0.3, -0.3], [0.3, -0.3], [-0.3, 0.3], [0.3, 0.3]].map(([x, z], i) => (
+        <mesh key={i} position={[x, 0.25, z]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.5]} />
+          <meshStandardMaterial color="#654321" roughness={0.8} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
+
+// Side Table with Detective Items
+const SideTable = ({ position }: { position: [number, number, number] }) => {
+  return (
+    <group position={position}>
+      {/* Table Top */}
+      <mesh position={[0, 0.7, 0]}>
+        <cylinderGeometry args={[0.4, 0.4, 0.05]} />
+        <meshStandardMaterial color="#654321" roughness={0.6} />
+      </mesh>
+      
+      {/* Table Leg */}
+      <mesh position={[0, 0.35, 0]}>
+        <cylinderGeometry args={[0.05, 0.08, 0.7]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.7} />
+      </mesh>
+      
+      {/* Magnifying Glass */}
+      <mesh position={[0.1, 0.75, 0.1]}>
+        <cylinderGeometry args={[0.08, 0.08, 0.02]} />
+        <meshStandardMaterial 
+          color="#ffffff" 
+          transparent 
+          opacity={0.3} 
+          metalness={0.1} 
+          roughness={0.1} 
+        />
+      </mesh>
+      <mesh position={[0.1, 0.75, 0.25]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.008, 0.008, 0.15]} />
+        <meshStandardMaterial color="#654321" roughness={0.8} />
+      </mesh>
+      
+      {/* Pipe */}
+      <mesh position={[-0.1, 0.75, 0]} rotation={[0, 0, 0.3]}>
+        <cylinderGeometry args={[0.02, 0.02, 0.12]} />
+        <meshStandardMaterial color="#8b4513" roughness={0.9} />
+      </mesh>
+      <mesh position={[-0.15, 0.78, -0.05]}>
+        <sphereGeometry args={[0.03]} />
+        <meshStandardMaterial color="#654321" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+// Coat Rack
+const CoatRack = ({ position }: { position: [number, number, number] }) => {
+  return (
+    <group position={position}>
+      {/* Main Pole */}
+      <mesh position={[0, 1, 0]}>
+        <cylinderGeometry args={[0.03, 0.03, 2]} />
+        <meshStandardMaterial color="#2a1810" roughness={0.8} />
+      </mesh>
+      
+      {/* Base */}
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.2, 0.2, 0.1]} />
+        <meshStandardMaterial color="#654321" roughness={0.7} />
+      </mesh>
+      
+      {/* Hooks */}
+      {[0.8, 1.2, 1.6].map((y, i) => (
+        <group key={i} rotation={[0, i * Math.PI / 3, 0]}>
+          <mesh position={[0.15, y, 0]} rotation={[0, 0, Math.PI / 6]}>
+            <cylinderGeometry args={[0.01, 0.01, 0.3]} />
+            <meshStandardMaterial color="#2a1810" roughness={0.8} />
+          </mesh>
+        </group>
+      ))}
+      
+      {/* Hat on top hook */}
+      <mesh position={[0.12, 1.7, 0.05]}>
+        <cylinderGeometry args={[0.15, 0.12, 0.08]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+// Persian Rug patterns
+const PersianRug = ({ position, size }: { 
+  position: [number, number, number]; 
+  size: [number, number] 
+}) => {
+  return (
+    <group position={position}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]}>
+        <planeGeometry args={size} />
+        <meshStandardMaterial color="#800020" roughness={0.9} />
+      </mesh>
+      
+      {/* Pattern details */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]}>
+        <planeGeometry args={[size[0] * 0.7, size[1] * 0.7]} />
+        <meshStandardMaterial color="#b8860b" roughness={0.9} />
+      </mesh>
+      
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.007, 0]}>
+        <planeGeometry args={[size[0] * 0.4, size[1] * 0.4]} />
+        <meshStandardMaterial color="#8b0000" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
 // Leo the Cat Component
 const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
   const catRef = useRef<THREE.Group>(null);
@@ -726,6 +999,36 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
           detectiveVision={detectiveVision} 
           onInteraction={handleInteraction} 
         />
+        
+        {/* Bookshelves along the walls */}
+        <Bookshelf position={[-9.5, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
+        <Bookshelf position={[-9.5, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
+        <Bookshelf position={[-9.5, 0, 2]} rotation={[0, Math.PI / 2, 0]} />
+        <Bookshelf position={[-9.5, 0, 6]} rotation={[0, Math.PI / 2, 0]} />
+        
+        <Bookshelf position={[9.5, 0, -6]} rotation={[0, -Math.PI / 2, 0]} />
+        <Bookshelf position={[9.5, 0, -2]} rotation={[0, -Math.PI / 2, 0]} />
+        <Bookshelf position={[9.5, 0, 2]} rotation={[0, -Math.PI / 2, 0]} />
+        <Bookshelf position={[9.5, 0, 6]} rotation={[0, -Math.PI / 2, 0]} />
+        
+        {/* Fireplace */}
+        <Fireplace />
+        
+        {/* Victorian Furniture */}
+        <VictorianChair position={[-4, 0, 1]} rotation={[0, Math.PI / 4, 0]} />
+        <VictorianChair position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
+        
+        {/* Side Tables with Detective Items */}
+        <SideTable position={[-5, 0, 3]} />
+        <SideTable position={[5, 0, 3]} />
+        
+        {/* Coat Rack */}
+        <CoatRack position={[8, 0, 8]} />
+        
+        {/* Additional Persian Rugs */}
+        <PersianRug position={[-4, 0, 1]} size={[2, 2]} />
+        <PersianRug position={[4, 0, 1]} size={[2, 2]} />
+        <PersianRug position={[0, 0, 5]} size={[3, 2]} />
       </Canvas>
 
       {/* Detective Vision Indicator */}
