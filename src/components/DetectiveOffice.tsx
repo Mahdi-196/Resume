@@ -483,34 +483,64 @@ const ResumeBoards = ({ detectiveVision, onInteraction }: {
   );
 };
 
-// Leo the Cat Component
+// Leo the Cat Component with Behavior States
 const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
   const catRef = useRef<THREE.Group>(null);
   const [position, setPosition] = useState<[number, number, number]>([3, 0.3, 2]);
+  const [behavior, setBehavior] = useState<'Wander' | 'SleepOnRug' | 'Groom'>('Wander');
+  const [groomingTime, setGroomingTime] = useState(0);
   
   useFrame((state) => {
     if (catRef.current) {
       // Gentle breathing animation
       catRef.current.scale.y = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.02;
       
-      // Occasional movement
-      if (Math.sin(state.clock.elapsedTime * 0.1) > 0.98) {
-        const newX = 3 + Math.sin(state.clock.elapsedTime * 0.05) * 2;
-        const newZ = 2 + Math.cos(state.clock.elapsedTime * 0.05) * 1;
-        setPosition([newX, 0.3, newZ]);
+      // Behavior state machine
+      const timeInState = state.clock.elapsedTime % 20; // 20 second cycles
+      
+      if (timeInState < 8) {
+        // Wander behavior (priority 1)
+        if (behavior !== 'Wander') setBehavior('Wander');
+        if (Math.sin(state.clock.elapsedTime * 0.1) > 0.98) {
+          const newX = 3 + Math.sin(state.clock.elapsedTime * 0.05) * 2;
+          const newZ = 2 + Math.cos(state.clock.elapsedTime * 0.05) * 1;
+          setPosition([newX, 0.3, newZ]);
+        }
+      } else if (timeInState < 15) {
+        // SleepOnRug behavior (priority 2)
+        if (behavior !== 'SleepOnRug') setBehavior('SleepOnRug');
+        // Move to rug position gradually
+        const rugPos: [number, number, number] = [0, 0.3, -2];
+        setPosition(prev => [
+          prev[0] + (rugPos[0] - prev[0]) * 0.02,
+          rugPos[1],
+          prev[2] + (rugPos[2] - prev[2]) * 0.02
+        ]);
+        // Curl up slightly when sleeping
+        catRef.current.scale.x = 1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      } else {
+        // Groom behavior (priority 3)
+        if (behavior !== 'Groom') setBehavior('Groom');
+        setGroomingTime(state.clock.elapsedTime);
+        // Slight head movement for grooming
+        catRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 3) * 0.3;
       }
     }
   });
+
+  const handleClick = () => {
+    onInteraction('leo_cat');
+  };
 
   return (
     <group 
       ref={catRef}
       position={position}
-      onClick={() => onInteraction('cat')}
+      onClick={handleClick}
       onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
       onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
     >
-      {/* Cat Body */}
+      {/* Tuxedo Cat Body - Black with white chest */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.3, 8, 6]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
@@ -522,9 +552,19 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
       </mesh>
       
-      {/* White Chest */}
+      {/* White Tuxedo Chest */}
       <mesh position={[0, -0.1, 0.2]}>
         <sphereGeometry args={[0.15, 8, 6]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.8} />
+      </mesh>
+      
+      {/* White Paws */}
+      <mesh position={[-0.15, -0.25, 0.1]}>
+        <sphereGeometry args={[0.05]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.15, -0.25, 0.1]}>
+        <sphereGeometry args={[0.05]} />
         <meshStandardMaterial color="#ffffff" roughness={0.8} />
       </mesh>
       
@@ -533,6 +573,30 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
         <boxGeometry args={[0.05, 0.05, 0.8]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
       </mesh>
+      
+      {/* Ears */}
+      <mesh position={[-0.08, 0.25, 0.3]}>
+        <coneGeometry args={[0.04, 0.08]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.08, 0.25, 0.3]}>
+        <coneGeometry args={[0.04, 0.08]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
+      </mesh>
+      
+      {/* Behavior indicator (small glow when grooming) */}
+      {behavior === 'Groom' && (
+        <mesh position={[0, 0.4, 0]}>
+          <sphereGeometry args={[0.02]} />
+          <meshStandardMaterial 
+            color="#ffff88"
+            emissive="#ffff88"
+            emissiveIntensity={0.5}
+            transparent
+            opacity={0.6}
+          />
+        </mesh>
+      )}
     </group>
   );
 };
@@ -689,6 +753,10 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
     if (type === 'lamp') {
       setLampOn(prev => !prev);
       console.log('Lamp toggled:', !lampOn);
+    } else if (type === 'leo_cat') {
+      // Show Leo's interaction text
+      console.log("This is Leo. In this world, he's an animation, but in the real world, he's probably sleeping on my desk right now.");
+      onInteraction('leo_cat', "This is Leo. In this world, he's an animation, but in the real world, he's probably sleeping on my desk right now.");
     } else {
       onInteraction(type, data);
     }
