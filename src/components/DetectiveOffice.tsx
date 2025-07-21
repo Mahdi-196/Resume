@@ -77,7 +77,7 @@ const OfficeRoom = () => {
   );
 };
 
-// Executive Desk Component with enhanced accessories
+// Executive Desk Component
 const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
   return (
     <group position={[0, 0, -3]}>
@@ -105,8 +105,6 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         <meshStandardMaterial color="#2a1810" />
       </mesh>
 
-      {/* Banker's Lamp */}
-      <BankersLamp position={[-1.5, 1.1, 0]} onInteraction={onInteraction} />
 
       {/* Typewriter */}
       <group 
@@ -136,95 +134,6 @@ const ExecutiveDesk = ({ onInteraction }: { onInteraction: (type: string) => voi
         {/* Continuous Smoke Effect */}
         <SmokeEffect position={[0, 0.05, 0]} />
       </group>
-
-      {/* Ink Well and Quill */}
-      <group position={[-0.8, 1.1, 0.5]}>
-        <mesh>
-          <cylinderGeometry args={[0.05, 0.04, 0.08]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-        </mesh>
-        <mesh position={[0.1, 0.05, 0]} rotation={[0, 0, -0.3]}>
-          <cylinderGeometry args={[0.005, 0.005, 0.2]} />
-          <meshStandardMaterial color="#8b4513" roughness={0.9} />
-        </mesh>
-      </group>
-
-      {/* Case Files Stack */}
-      <group position={[0, 1.11, -0.7]}>
-        {[0, 0.02, 0.04].map((y, i) => (
-          <mesh key={i} position={[0, y, 0]}>
-            <boxGeometry args={[0.8, 0.01, 0.6]} />
-            <meshStandardMaterial color="#f5e6d3" roughness={0.8} />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Pocket Watch */}
-      <group position={[-0.3, 1.11, -0.3]}>
-        <mesh>
-          <cylinderGeometry args={[0.04, 0.04, 0.01]} />
-          <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
-        </mesh>
-        <mesh position={[0, 0.005, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 0.005]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.1} />
-        </mesh>
-      </group>
-
-      {/* Magnifying Glass on Stand */}
-      <group position={[1.5, 1.1, 0.7]}>
-        <mesh position={[0, 0.1, 0]}>
-          <cylinderGeometry args={[0.01, 0.01, 0.2]} />
-          <meshStandardMaterial color="#654321" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0.2, 0]}>
-          <torusGeometry args={[0.08, 0.01]} />
-          <meshStandardMaterial color="#654321" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0.2, 0]}>
-          <cylinderGeometry args={[0.075, 0.075, 0.005]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.3} />
-        </mesh>
-      </group>
-    </group>
-  );
-};
-
-// Banker's Lamp Component
-const BankersLamp = ({ position, onInteraction }: { 
-  position: [number, number, number]; 
-  onInteraction: (type: string) => void 
-}) => {
-  return (
-    <group 
-      position={position}
-      onClick={() => onInteraction('lamp')}
-      onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-      onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-    >
-      {/* Base */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.08, 0.1, 0.03]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
-      </mesh>
-      
-      {/* Stem */}
-      <mesh position={[0, 0.08, 0]}>
-        <cylinderGeometry args={[0.01, 0.01, 0.16]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
-      </mesh>
-      
-      {/* Green Glass Shade */}
-      <mesh position={[0, 0.16, 0]}>
-        <sphereGeometry args={[0.12, 16, 8]} />
-        <meshStandardMaterial 
-          color="#228b22" 
-          transparent 
-          opacity={0.8} 
-          metalness={0.1} 
-          roughness={0.2} 
-        />
-      </mesh>
     </group>
   );
 };
@@ -501,6 +410,7 @@ const Chandelier = ({ onInteraction }: { onInteraction: (type: string) => void }
   );
 };
 
+// Remove the old HangingLamp component since we're using chandelier
 // Smoke Effect Component
 const SmokeEffect = ({ position }: { position: [number, number, number] }) => {
   const smokeRef = useRef<THREE.Group>(null);
@@ -621,91 +531,6 @@ const Bookshelf = ({ position, rotation = [0, 0, 0] }: {
           ))}
         </group>
       ))}
-    </group>
-  );
-};
-
-// Wall Decorations Component
-const WallDecorations = () => {
-  return (
-    <group>
-      {/* Old Map on Left Wall */}
-      <group position={[-9.8, 3, -4]}>
-        <mesh>
-          <planeGeometry args={[1.5, 1]} />
-          <meshStandardMaterial color="#d2b48c" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0, 0.001]}>
-          <planeGeometry args={[1.3, 0.8]} />
-          <meshStandardMaterial color="#8b7355" roughness={0.9} />
-        </mesh>
-      </group>
-
-      {/* Vintage Portrait on Right Wall */}
-      <group position={[9.8, 3.5, 2]}>
-        <mesh>
-          <planeGeometry args={[0.8, 1]} />
-          <meshStandardMaterial color="#654321" roughness={0.7} />
-        </mesh>
-        <mesh position={[0, 0, 0.001]}>
-          <planeGeometry args={[0.6, 0.8]} />
-          <meshStandardMaterial color="#8b7355" roughness={0.8} />
-        </mesh>
-      </group>
-
-      {/* Certificate/Diploma */}
-      <group position={[9.8, 2.5, -4]}>
-        <mesh>
-          <planeGeometry args={[1, 0.7]} />
-          <meshStandardMaterial color="#f5f5dc" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0, 0.001]}>
-          <planeGeometry args={[0.8, 0.5]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
-        </mesh>
-      </group>
-
-      {/* Wall Sconces */}
-      <WallSconce position={[-9.8, 4, 4]} rotation={[0, Math.PI / 2, 0]} />
-      <WallSconce position={[9.8, 4, -6]} rotation={[0, -Math.PI / 2, 0]} />
-    </group>
-  );
-};
-
-// Wall Sconce Component
-const WallSconce = ({ position, rotation }: { 
-  position: [number, number, number]; 
-  rotation: [number, number, number] 
-}) => {
-  return (
-    <group position={position} rotation={rotation}>
-      {/* Mounting Plate */}
-      <mesh position={[0, 0, 0.1]}>
-        <cylinderGeometry args={[0.1, 0.1, 0.02]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
-      </mesh>
-      
-      {/* Candle Holder */}
-      <mesh position={[0, 0, 0.15]}>
-        <cylinderGeometry args={[0.03, 0.05, 0.08]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
-      </mesh>
-      
-      {/* Candle */}
-      <mesh position={[0, 0, 0.22]}>
-        <cylinderGeometry args={[0.02, 0.02, 0.15]} />
-        <meshStandardMaterial color="#fff8dc" roughness={0.8} />
-      </mesh>
-      
-      {/* Flame */}
-      <mesh position={[0, 0, 0.32]}>
-        <sphereGeometry args={[0.015]} />
-        <meshStandardMaterial 
-          color="#ffa500" 
-          emissive="#ffa500"
-          emissiveIntensity={1.0}
-        />
-      </mesh>
     </group>
   );
 };
@@ -872,22 +697,6 @@ const SideTable = ({ position }: { position: [number, number, number] }) => {
         <sphereGeometry args={[0.03]} />
         <meshStandardMaterial color="#654321" roughness={0.9} />
       </mesh>
-
-      {/* Teacup and Saucer */}
-      <group position={[0, 0.75, -0.2]}>
-        <mesh>
-          <cylinderGeometry args={[0.06, 0.04, 0.02]} />
-          <meshStandardMaterial color="#f5f5dc" roughness={0.3} />
-        </mesh>
-        <mesh position={[0, 0.02, 0]}>
-          <cylinderGeometry args={[0.04, 0.04, 0.05]} />
-          <meshStandardMaterial color="#f5f5dc" roughness={0.3} />
-        </mesh>
-        <mesh position={[0.06, 0.03, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <torusGeometry args={[0.015, 0.005]} />
-          <meshStandardMaterial color="#f5f5dc" roughness={0.3} />
-        </mesh>
-      </group>
     </group>
   );
 };
@@ -922,12 +731,6 @@ const CoatRack = ({ position }: { position: [number, number, number] }) => {
       <mesh position={[0.12, 1.7, 0.05]}>
         <cylinderGeometry args={[0.15, 0.12, 0.08]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
-      </mesh>
-
-      {/* Coat on middle hook */}
-      <mesh position={[0.2, 1.2, 0.1]} rotation={[0, 0.3, 0]}>
-        <boxGeometry args={[0.05, 0.6, 0.4]} />
-        <meshStandardMaterial color="#2a2a2a" roughness={0.8} />
       </mesh>
     </group>
   );
@@ -1013,103 +816,6 @@ const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void })
   );
 };
 
-// Grandfather Clock Component
-const GrandfatherClock = ({ position }: { position: [number, number, number] }) => {
-  const clockRef = useRef<THREE.Group>(null);
-  
-  useFrame((state) => {
-    if (clockRef.current) {
-      // Pendulum swing
-      const pendulum = clockRef.current.children[3] as THREE.Group;
-      if (pendulum) {
-        pendulum.rotation.z = Math.sin(state.clock.elapsedTime * 2) * 0.2;
-      }
-    }
-  });
-
-  return (
-    <group ref={clockRef} position={position}>
-      {/* Main Body */}
-      <mesh position={[0, 1.5, 0]}>
-        <boxGeometry args={[0.4, 3, 0.3]} />
-        <meshStandardMaterial color="#654321" roughness={0.7} />
-      </mesh>
-      
-      {/* Clock Face */}
-      <mesh position={[0, 2.5, 0.16]}>
-        <cylinderGeometry args={[0.15, 0.15, 0.02]} />
-        <meshStandardMaterial color="#f5f5dc" roughness={0.3} />
-      </mesh>
-      
-      {/* Clock Hands */}
-      <mesh position={[0, 2.5, 0.17]} rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[0.08, 0.005, 0.005]} />
-        <meshStandardMaterial color="#1a1a1a" />
-      </mesh>
-      <mesh position={[0, 2.5, 0.17]} rotation={[0, 0, Math.PI / 6]}>
-        <boxGeometry args={[0.06, 0.005, 0.005]} />
-        <meshStandardMaterial color="#1a1a1a" />
-      </mesh>
-      
-      {/* Pendulum */}
-      <group position={[0, 1, 0.1]}>
-        <mesh position={[0, -0.3, 0]}>
-          <cylinderGeometry args={[0.01, 0.01, 0.6]} />
-          <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
-        </mesh>
-        <mesh position={[0, -0.6, 0]}>
-          <cylinderGeometry args={[0.08, 0.08, 0.02]} />
-          <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
-        </mesh>
-      </group>
-      
-      {/* Base */}
-      <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[0.5, 0.2, 0.4]} />
-        <meshStandardMaterial color="#8b4513" roughness={0.7} />
-      </mesh>
-    </group>
-  );
-};
-
-// Globe Component
-const WorldGlobe = ({ position }: { position: [number, number, number] }) => {
-  const globeRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    if (globeRef.current) {
-      globeRef.current.rotation.y = state.clock.elapsedTime * 0.1;
-    }
-  });
-
-  return (
-    <group position={position}>
-      {/* Stand Base */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.08, 0.1, 0.05]} />
-        <meshStandardMaterial color="#654321" roughness={0.7} />
-      </mesh>
-      
-      {/* Stand Arm */}
-      <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[0.005, 0.005, 0.3]} />
-        <meshStandardMaterial color="#8b7355" metalness={0.7} roughness={0.3} />
-      </mesh>
-      
-      {/* Globe */}
-      <mesh ref={globeRef} position={[0, 0.3, 0]}>
-        <sphereGeometry args={[0.12]} />
-        <meshStandardMaterial color="#4682b4" roughness={0.8} />
-      </mesh>
-      
-      {/* Continents (simple representation) */}
-      <mesh position={[0, 0.3, 0.12]}>
-        <planeGeometry args={[0.08, 0.06]} />
-        <meshStandardMaterial color="#228b22" roughness={0.9} />
-      </mesh>
-    </group>
-  );
-};
 
 // Camera Controls Component
 const CameraControls = () => {
@@ -1249,31 +955,6 @@ const Lighting = ({ lampOn }: { lampOn: boolean }) => {
         distance={20}
         decay={2}
       />
-      
-      {/* Fireplace light */}
-      <pointLight 
-        position={[-7.8, 1.2, 0]} 
-        intensity={0.8}
-        color="#ff4500"
-        distance={8}
-        decay={2}
-      />
-      
-      {/* Wall sconce lights */}
-      <pointLight 
-        position={[-9.5, 4, 4]} 
-        intensity={0.3}
-        color="#ffa500"
-        distance={5}
-        decay={2}
-      />
-      <pointLight 
-        position={[9.5, 4, -6]} 
-        intensity={0.3}
-        color="#ffa500"
-        distance={5}
-        decay={2}
-      />
     </>
   );
 };
@@ -1319,9 +1000,6 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
           onInteraction={handleInteraction} 
         />
         
-        {/* Wall Decorations */}
-        <WallDecorations />
-        
         {/* Bookshelves along the walls */}
         <Bookshelf position={[-9.5, 0, -6]} rotation={[0, Math.PI / 2, 0]} />
         <Bookshelf position={[-9.5, 0, -2]} rotation={[0, Math.PI / 2, 0]} />
@@ -1347,28 +1025,10 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         {/* Coat Rack */}
         <CoatRack position={[8, 0, 8]} />
         
-        {/* Grandfather Clock */}
-        <GrandfatherClock position={[8.5, 0, -8]} />
-        
-        {/* Globe */}
-        <WorldGlobe position={[-8, 4.2, -8]} />
-        
         {/* Additional Persian Rugs */}
         <PersianRug position={[-4, 0, 1]} size={[2, 2]} />
         <PersianRug position={[4, 0, 1]} size={[2, 2]} />
         <PersianRug position={[0, 0, 5]} size={[3, 2]} />
-        
-        {/* Window Curtains */}
-        <group position={[0, 2.5, -9.4]}>
-          <mesh position={[-8, 1, 0]}>
-            <planeGeometry args={[1.5, 4]} />
-            <meshStandardMaterial color="#8b0000" roughness={0.9} />
-          </mesh>
-          <mesh position={[8, 1, 0]}>
-            <planeGeometry args={[1.5, 4]} />
-            <meshStandardMaterial color="#8b0000" roughness={0.9} />
-          </mesh>
-        </group>
       </Canvas>
 
       {/* Detective Vision Indicator */}
