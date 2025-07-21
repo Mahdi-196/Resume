@@ -61,7 +61,26 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				detective: {
+					wood: 'hsl(var(--detective-wood))',
+					brass: 'hsl(var(--detective-brass))',
+					leather: 'hsl(var(--detective-leather))',
+					paper: 'hsl(var(--detective-paper))',
+					smoke: 'hsl(var(--detective-smoke))',
+					glow: 'hsl(var(--detective-glow))'
+				},
+				noir: {
+					shadow: 'hsl(var(--noir-shadow))',
+					warm: 'hsl(var(--warm-light))',
+					window: 'hsl(var(--window-light))',
+					emissive: 'hsl(var(--emissive-white))'
 				}
+			},
+			backgroundImage: {
+				'gradient-office': 'var(--gradient-office)',
+				'gradient-glow': 'var(--gradient-glow)',
+				'gradient-smoke': 'var(--gradient-smoke)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +103,66 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'detective-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 20px hsl(var(--detective-glow) / 0.5)',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						boxShadow: '0 0 40px hsl(var(--detective-glow) / 0.8)',
+						transform: 'scale(1.02)'
+					}
+				},
+				'smoke-rise': {
+					'0%': {
+						transform: 'translateY(0) rotate(0deg)',
+						opacity: '0.8'
+					},
+					'100%': {
+						transform: 'translateY(-30px) rotate(15deg)',
+						opacity: '0'
+					}
+				},
+				'photo-develop': {
+					'0%': {
+						filter: 'contrast(0) brightness(2)',
+						transform: 'scale(1.1)'
+					},
+					'50%': {
+						filter: 'contrast(0.5) brightness(1.5)',
+						transform: 'scale(1.05)'
+					},
+					'100%': {
+						filter: 'contrast(1) brightness(1)',
+						transform: 'scale(1)'
+					}
+				},
+				'typewriter': {
+					'from': {
+						width: '0'
+					},
+					'to': {
+						width: '100%'
+					}
+				},
+				'flicker': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.8'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'detective-glow': 'detective-glow 3s ease-in-out infinite',
+				'smoke-rise': 'smoke-rise 4s ease-out infinite',
+				'photo-develop': 'photo-develop 3s ease-out forwards',
+				'typewriter': 'typewriter 2s steps(20) forwards',
+				'flicker': 'flicker 0.3s ease-in-out infinite'
 			}
 		}
 	},

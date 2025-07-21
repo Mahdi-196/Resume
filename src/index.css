@@ -8,33 +8,59 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Film Noir Detective Theme - Dark & Moody */
+    --background: 25 15% 8%;            /* Deep charcoal background */
+    --foreground: 45 25% 85%;           /* Warm off-white text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 20 20% 12%;                 /* Dark wood panels */
+    --card-foreground: 45 25% 85%;      /* Warm text on cards */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 20 20% 12%;
+    --popover-foreground: 45 25% 85%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 40 45% 45%;              /* Warm amber/brass */
+    --primary-foreground: 25 15% 8%;    /* Dark text on amber */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 25 25% 18%;            /* Rich mahogany */
+    --secondary-foreground: 45 25% 85%; /* Light text on mahogany */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 20 15% 15%;                /* Muted dark brown */
+    --muted-foreground: 40 15% 60%;     /* Muted amber text */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 60% 55%;               /* Golden accent */
+    --accent-foreground: 25 15% 8%;     /* Dark text on gold */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 45%;           /* Deep red */
+    --destructive-foreground: 45 25% 85%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 25 20% 25%;               /* Subtle wood border */
+    --input: 25 20% 25%;                /* Input background */
+    --ring: 40 45% 45%;                 /* Amber focus ring */
+
+    --radius: 0.5rem;
+
+    /* Detective Office Colors */
+    --detective-wood: 25 35% 15%;       /* Dark mahogany wood */
+    --detective-brass: 45 70% 50%;      /* Brass fixtures */
+    --detective-leather: 20 25% 20%;    /* Rich leather */
+    --detective-paper: 45 15% 85%;      /* Aged paper */
+    --detective-smoke: 0 0% 40%;        /* Cigarette smoke */
+    --detective-glow: 50 100% 70%;      /* Warm lamp glow */
+    
+    /* Atmospheric Effects */
+    --noir-shadow: 0 0% 5%;             /* Deep shadows */
+    --warm-light: 50 80% 65%;           /* Tungsten lamp light */
+    --window-light: 220 30% 20%;        /* Cool window light */
+    --emissive-white: 60 5% 95%;        /* Glowing white displays */
+    
+    /* Gradients */
+    --gradient-office: linear-gradient(135deg, hsl(var(--detective-wood)), hsl(var(--noir-shadow)));
+    --gradient-glow: radial-gradient(circle, hsl(var(--detective-glow) / 0.8), transparent);
+    --gradient-smoke: linear-gradient(90deg, transparent, hsl(var(--detective-smoke) / 0.4), transparent);
+    
+    /* Animations */
+    --transition-detective: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --pulse-glow: pulse 2s ease-in-out infinite;
 
     --radius: 0.5rem;
 

@@ -1,12 +1,48 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { LoadingScreen } from '@/components/LoadingScreen';
+import { DetectiveOffice } from '@/components/DetectiveOffice';
+import { ResumeOverlay } from '@/components/ResumeOverlay';
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  const handleInteraction = (type: string, data?: any) => {
+    switch (type) {
+      case 'lamp':
+        // Toggle lamp glow effect
+        console.log('Banker lamp clicked');
+        break;
+      case 'typewriter':
+        setActiveOverlay('typewriter');
+        break;
+      case 'board':
+        setActiveOverlay(data);
+        break;
+      case 'cat':
+        setActiveOverlay('cat');
+        break;
+      default:
+        console.log('Interaction:', type, data);
+    }
+  };
+
+  const handleCloseOverlay = () => {
+    setActiveOverlay(null);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="w-full h-screen overflow-hidden">
+      <DetectiveOffice onInteraction={handleInteraction} />
+      <ResumeOverlay content={activeOverlay} onClose={handleCloseOverlay} />
     </div>
   );
 };
