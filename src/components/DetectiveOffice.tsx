@@ -393,7 +393,57 @@ const SmokeEffect = ({ position }: { position: [number, number, number] }) => {
   );
 };
 
-// Resume Display Boards - Removed as per user request
+// Resume Display Boards
+const ResumeBoards = ({ detectiveVision, onInteraction }: { 
+  detectiveVision: boolean;
+  onInteraction: (type: string, data: string) => void;
+}) => {
+  const boards = [
+    { title: 'ABOUT ME', position: [-6, 2, -8] as [number, number, number], content: 'about' },
+    { title: 'SKILLS', position: [0, 2, -8] as [number, number, number], content: 'skills' },
+    { title: 'RESUME', position: [6, 2, -8] as [number, number, number], content: 'resume' }
+  ];
+
+  return (
+    <>
+      {boards.map((board, index) => (
+        <group 
+          key={board.content}
+          position={board.position}
+          onClick={() => onInteraction('board', board.content)}
+          onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
+          onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
+        >
+          {/* Easel */}
+          <mesh position={[-0.8, -0.5, 0]}>
+            <boxGeometry args={[0.05, 3, 0.05]} />
+            <meshStandardMaterial color="#8b4513" />
+          </mesh>
+          <mesh position={[0.8, -0.5, 0]}>
+            <boxGeometry args={[0.05, 3, 0.05]} />
+            <meshStandardMaterial color="#8b4513" />
+          </mesh>
+          
+          {/* Display Board */}
+          <mesh position={[0, 0, 0.1]}>
+            <planeGeometry args={[2, 1.5]} />
+            <meshStandardMaterial 
+              color={detectiveVision ? "#ffffff" : "#f5f5dc"}
+              emissive={detectiveVision ? "#ffffff" : "#000000"}
+              emissiveIntensity={detectiveVision ? 0.3 : 0}
+            />
+          </mesh>
+
+          {/* Simple text representation */}
+          <mesh position={[0, 0.5, 0.2]}>
+            <boxGeometry args={[1.5, 0.1, 0.01]} />
+            <meshStandardMaterial color="#1a1a1a" />
+          </mesh>
+        </group>
+      ))}
+    </>
+  );
+};
 
 // Leo the Cat Component
 const LeoTheCat = ({ onInteraction }: { onInteraction: (type: string) => void }) => {
@@ -627,6 +677,10 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <ExecutiveDesk onInteraction={handleInteraction} />
         <LeoTheCat onInteraction={onInteraction} />
         <OfficeWindow />
+        <ResumeBoards 
+          detectiveVision={detectiveVision} 
+          onInteraction={handleInteraction} 
+        />
       </Canvas>
 
       {/* Detective Vision Indicator */}
