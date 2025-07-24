@@ -1,123 +1,45 @@
 
 import { useRef, useState, useEffect, forwardRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface DetectiveCharacterProps {
-  position: [number, number, number];
-  onInteraction: (type: string, data?: any) => void;
+  position?: [number, number, number];
+  onInteraction: (type: string, data?: unknown) => void;
+  scale?: number;
+  autoRotate?: boolean;
 }
 
 export const DetectiveCharacter = forwardRef<THREE.Group, DetectiveCharacterProps>(
-  ({ position, onInteraction }, ref) => {
+  ({ 
+    position = [0, 0, 0], 
+    onInteraction, 
+    scale = 1, 
+    autoRotate = false 
+  }, ref) => {
+  
   const groupRef = useRef<THREE.Group>(null);
   const [isWalking, setIsWalking] = useState(false);
   const [rotationY, setRotationY] = useState(0);
-  
-  // For now, we'll create a placeholder low-poly detective character
-  // This will be replaced with the actual GLTF model once downloaded
-  const DetectivePlaceholder = () => {
+
+  // Auto rotation or walking animation
+  useFrame((state) => {
+    const currentRef = ref && 'current' in ref ? ref.current : groupRef.current;
     
-    useFrame((state) => {
-      if (ref && 'current' in ref && ref.current && isWalking) {
+    if (currentRef) {
+      if (autoRotate) {
+        currentRef.rotation.y += 0.01;
+      } else if (isWalking) {
         // Simple walking animation - bob up and down
-        ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 4) * 0.05;
+        currentRef.position.y = position[1] + Math.sin(state.clock.elapsedTime * 4) * 0.05;
       }
-    });
+    }
+  });
 
-    return (
-      <group 
-        ref={ref}
-        position={position}
-        rotation={[0, rotationY, 0]}
-        onClick={() => onInteraction('detective')}
-        onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
-        onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
-      >
-        {/* Detective Body - Coat */}
-        <mesh position={[0, 1, 0]}>
-          <boxGeometry args={[0.6, 1.2, 0.3]} />
-          <meshStandardMaterial color="#2a2a2a" roughness={0.8} />
-        </mesh>
-        
-        {/* Detective Head */}
-        <mesh position={[0, 1.8, 0]}>
-          <sphereGeometry args={[0.2]} />
-          <meshStandardMaterial color="#d4a574" roughness={0.7} />
-        </mesh>
-        
-        {/* Detective Hat */}
-        <mesh position={[0, 2.1, 0]}>
-          <cylinderGeometry args={[0.25, 0.2, 0.15]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
-        </mesh>
-        
-        {/* Hat Brim */}
-        <mesh position={[0, 2, 0]}>
-          <cylinderGeometry args={[0.35, 0.35, 0.02]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
-        </mesh>
-        
-        {/* Arms */}
-        <mesh position={[-0.4, 1.2, 0]}>
-          <boxGeometry args={[0.15, 0.8, 0.15]} />
-          <meshStandardMaterial color="#2a2a2a" roughness={0.8} />
-        </mesh>
-        <mesh position={[0.4, 1.2, 0]}>
-          <boxGeometry args={[0.15, 0.8, 0.15]} />
-          <meshStandardMaterial color="#2a2a2a" roughness={0.8} />
-        </mesh>
-        
-        {/* Legs */}
-        <mesh position={[-0.15, 0.4, 0]}>
-          <boxGeometry args={[0.15, 0.8, 0.15]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-        </mesh>
-        <mesh position={[0.15, 0.4, 0]}>
-          <boxGeometry args={[0.15, 0.8, 0.15]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
-        </mesh>
-        
-        {/* Shoes */}
-        <mesh position={[-0.15, 0.05, 0.1]}>
-          <boxGeometry args={[0.18, 0.1, 0.3]} />
-          <meshStandardMaterial color="#0a0a0a" roughness={0.9} />
-        </mesh>
-        <mesh position={[0.15, 0.05, 0.1]}>
-          <boxGeometry args={[0.18, 0.1, 0.3]} />
-          <meshStandardMaterial color="#0a0a0a" roughness={0.9} />
-        </mesh>
-        
-        {/* Detective Badge */}
-        <mesh position={[0, 1.3, 0.16]}>
-          <boxGeometry args={[0.08, 0.08, 0.01]} />
-          <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.2} />
-        </mesh>
-        
-        {/* Magnifying Glass in hand */}
-        <group position={[0.4, 1.4, 0.2]}>
-          <mesh>
-            <cylinderGeometry args={[0.08, 0.08, 0.02]} />
-            <meshStandardMaterial 
-              color="#ffffff" 
-              transparent 
-              opacity={0.3} 
-              metalness={0.1} 
-              roughness={0.1} 
-            />
-          </mesh>
-          <mesh position={[0, -0.1, 0]}>
-            <cylinderGeometry args={[0.005, 0.005, 0.15]} />
-            <meshStandardMaterial color="#654321" roughness={0.8} />
-          </mesh>
-        </group>
-      </group>
-    );
-  };
-
-  // Simple patrol behavior
+  // Simple patrol behavior when not auto-rotating
   useEffect(() => {
+    if (autoRotate) return;
+    
     const interval = setInterval(() => {
       setIsWalking(true);
       const newRotation = Math.random() * Math.PI * 2;
@@ -129,22 +51,158 @@ export const DetectiveCharacter = forwardRef<THREE.Group, DetectiveCharacterProp
     }, 8000); // Every 8 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [autoRotate]);
 
-  return <DetectivePlaceholder />;
+  return (
+    <group 
+      ref={ref || groupRef}
+      position={position}
+      rotation={[0, rotationY, 0]}
+      scale={[scale, scale, scale]}
+      onClick={() => onInteraction('detective')}
+      onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }}
+      onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}
+    >
+      {/* Detective Body - Long Coat */}
+      <mesh position={[0, 1, 0]}>
+        <boxGeometry args={[0.7, 1.4, 0.35]} />
+        <meshStandardMaterial color="#2c1810" roughness={0.8} />
+      </mesh>
+      
+      {/* Coat Lapels */}
+      <mesh position={[-0.25, 1.4, 0.18]}>
+        <boxGeometry args={[0.15, 0.4, 0.02]} />
+        <meshStandardMaterial color="#1a0f0a" roughness={0.9} />
+      </mesh>
+      <mesh position={[0.25, 1.4, 0.18]}>
+        <boxGeometry args={[0.15, 0.4, 0.02]} />
+        <meshStandardMaterial color="#1a0f0a" roughness={0.9} />
+      </mesh>
+      
+      {/* Detective Head */}
+      <mesh position={[0, 1.9, 0]}>
+        <sphereGeometry args={[0.22]} />
+        <meshStandardMaterial color="#d4a574" roughness={0.7} />
+      </mesh>
+      
+      {/* Detective Fedora Hat */}
+      <mesh position={[0, 2.25, 0]}>
+        <cylinderGeometry args={[0.28, 0.25, 0.2]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
+      </mesh>
+      
+      {/* Hat Brim */}
+      <mesh position={[0, 2.15, 0]}>
+        <cylinderGeometry args={[0.4, 0.4, 0.03]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
+      </mesh>
+      
+      {/* Hat Band */}
+      <mesh position={[0, 2.2, 0]}>
+        <cylinderGeometry args={[0.26, 0.26, 0.05]} />
+        <meshStandardMaterial color="#8B4513" roughness={0.7} />
+      </mesh>
+      
+      {/* Arms in Coat */}
+      <mesh position={[-0.45, 1.2, 0]}>
+        <boxGeometry args={[0.18, 0.9, 0.18]} />
+        <meshStandardMaterial color="#2c1810" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.45, 1.2, 0]}>
+        <boxGeometry args={[0.18, 0.9, 0.18]} />
+        <meshStandardMaterial color="#2c1810" roughness={0.8} />
+      </mesh>
+      
+      {/* Hands */}
+      <mesh position={[-0.45, 0.7, 0]}>
+        <sphereGeometry args={[0.08]} />
+        <meshStandardMaterial color="#d4a574" roughness={0.7} />
+      </mesh>
+      <mesh position={[0.45, 0.7, 0]}>
+        <sphereGeometry args={[0.08]} />
+        <meshStandardMaterial color="#d4a574" roughness={0.7} />
+      </mesh>
+      
+      {/* Legs - Dark Trousers */}
+      <mesh position={[-0.18, 0.3, 0]}>
+        <boxGeometry args={[0.16, 0.9, 0.16]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.18, 0.3, 0]}>
+        <boxGeometry args={[0.16, 0.9, 0.16]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.8} />
+      </mesh>
+      
+      {/* Detective Shoes - Dress Shoes */}
+      <mesh position={[-0.18, -0.1, 0.12]}>
+        <boxGeometry args={[0.2, 0.12, 0.35]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.3} metalness={0.1} />
+      </mesh>
+      <mesh position={[0.18, -0.1, 0.12]}>
+        <boxGeometry args={[0.2, 0.12, 0.35]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.3} metalness={0.1} />
+      </mesh>
+      
+      {/* Detective Badge */}
+      <mesh position={[0, 1.4, 0.18]}>
+        <cylinderGeometry args={[0.06, 0.06, 0.01]} />
+        <meshStandardMaterial color="#ffd700" metalness={0.9} roughness={0.1} />
+      </mesh>
+      
+      {/* Magnifying Glass in Hand */}
+      <group position={[0.45, 0.8, 0.2]}>
+        <mesh>
+          <cylinderGeometry args={[0.1, 0.1, 0.02]} />
+          <meshStandardMaterial 
+            color="#ffffff" 
+            transparent 
+            opacity={0.3} 
+            metalness={0.1} 
+            roughness={0.1} 
+          />
+        </mesh>
+        <mesh position={[0, -0.12, 0]}>
+          <cylinderGeometry args={[0.008, 0.008, 0.18]} />
+          <meshStandardMaterial color="#654321" roughness={0.8} />
+        </mesh>
+      </group>
+      
+      {/* Coat Buttons */}
+      <mesh position={[0, 1.5, 0.18]}>
+        <sphereGeometry args={[0.03]} />
+        <meshStandardMaterial color="#2a2a2a" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 1.2, 0.18]}>
+        <sphereGeometry args={[0.03]} />
+        <meshStandardMaterial color="#2a2a2a" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 0.9, 0.18]}>
+        <sphereGeometry args={[0.03]} />
+        <meshStandardMaterial color="#2a2a2a" roughness={0.5} />
+      </mesh>
+      
+      {/* Collar */}
+      <mesh position={[0, 1.7, 0.1]}>
+        <boxGeometry args={[0.3, 0.1, 0.1]} />
+        <meshStandardMaterial color="#f5f5dc" roughness={0.6} />
+      </mesh>
+      
+      {/* Tie */}
+      <mesh position={[0, 1.5, 0.16]}>
+        <boxGeometry args={[0.08, 0.3, 0.02]} />
+        <meshStandardMaterial color="#8B0000" roughness={0.7} />
+      </mesh>
+      
+      {/* Mustache */}
+      <mesh position={[0, 1.85, 0.21]}>
+        <boxGeometry args={[0.12, 0.02, 0.02]} />
+        <meshStandardMaterial color="#654321" roughness={0.9} />
+      </mesh>
+      
+      {/* Subtle lighting for the character */}
+      <pointLight position={[0, 2.5, 1]} intensity={0.3} color="#ffd700" />
+    </group>
+  );
 });
 
-// Hook for model loading (ready for GLTF integration)
-export const useDetectiveModel = (modelPath: string) => {
-  const [model, setModel] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // This will be implemented when we have the actual GLTF model
-    // For now, we use the placeholder
-    setLoading(false);
-  }, [modelPath]);
-
-  return { model, loading, error };
-};
+DetectiveCharacter.displayName = 'DetectiveCharacter';
