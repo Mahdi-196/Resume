@@ -12,7 +12,11 @@
       "Bash(unar:*)",
       "Bash(cp:*)",
       "Bash(true)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx update-browserslist-db:*)",
+      "Bash(npm update:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)"
     ],
     "deny": []
   }

@@ -15,6 +15,8 @@ import { FilingCabinet } from './FilingCabinet';
 import { DetectiveProps } from './DetectiveProps';
 import { SideTable } from './SideTable';
 import { PersianRug } from './PersianRug';
+import { VictorianDoor } from './VictorianDoor';
+import { VictorianChandelier } from './VictorianChandelier';
 import { ThreeEvent } from '../types/three';
 
 interface DetectiveOfficeProps {
@@ -22,7 +24,7 @@ interface DetectiveOfficeProps {
 }
 
 // Enhanced Detective Office with Character
-const DetectiveOfficeScene = ({ onInteraction }: { onInteraction: (type: string, data?: unknown) => void }) => {
+const DetectiveOfficeScene = ({ onInteraction, lampOn }: { onInteraction: (type: string, data?: unknown) => void; lampOn: boolean }) => {
   const detectiveRef = useRef<THREE.Group>(null);
   
   // Character movement bounds (keep detective within office)
@@ -90,16 +92,23 @@ const DetectiveOfficeScene = ({ onInteraction }: { onInteraction: (type: string,
       {/* Detective Investigation Board */}
       <DetectiveInvestigationBoard onInteraction={onInteraction} />
       
-      {/* Bookshelves along walls - each with unique variant */}
+      {/* Asymmetrical Bookshelves - Left wall (3 bookshelves with gaps) */}
       <Bookshelf position={[-9.0, 0, -6]} rotation={[0, Math.PI / 2, 0]} variant={1} />
-      <Bookshelf position={[-9.0, 0, -2]} rotation={[0, Math.PI / 2, 0]} variant={2} />
-      <Bookshelf position={[-9.0, 0, 2]} rotation={[0, Math.PI / 2, 0]} variant={3} />
-      <Bookshelf position={[-9.0, 0, 6]} rotation={[0, Math.PI / 2, 0]} variant={4} />
+      <Bookshelf position={[-9.0, 0, 0]} rotation={[0, Math.PI / 2, 0]} variant={2} />
+      <Bookshelf position={[-9.0, 0, 6]} rotation={[0, Math.PI / 2, 0]} variant={3} />
       
+      {/* Right wall (2 bookshelves with space for door) */}
       <Bookshelf position={[9.0, 0, -6]} rotation={[0, -Math.PI / 2, 0]} variant={5} />
-      <Bookshelf position={[9.0, 0, -2]} rotation={[0, -Math.PI / 2, 0]} variant={6} />
-      <Bookshelf position={[9.0, 0, 2]} rotation={[0, -Math.PI / 2, 0]} variant={7} />
-      <Bookshelf position={[9.0, 0, 6]} rotation={[0, -Math.PI / 2, 0]} variant={8} />
+      <Bookshelf position={[9.0, 0, 2]} rotation={[0, -Math.PI / 2, 0]} variant={6} />
+      
+      {/* Corner bookshelf - L-shaped arrangement */}
+      <Bookshelf position={[-8, 0, -9]} rotation={[0, 0, 0]} variant={7} />
+      
+      {/* Victorian Door on right wall */}
+      <VictorianDoor position={[9.5, 0, 8]} rotation={[0, -Math.PI / 2, 0]} onInteraction={onInteraction} />
+      
+      {/* Victorian Chandelier - moved down from ceiling */}
+      <VictorianChandelier position={[0, 9, 2]} isLit={lampOn} />
       
       {/* Fireplace */}
       <Fireplace />
@@ -112,14 +121,17 @@ const DetectiveOfficeScene = ({ onInteraction }: { onInteraction: (type: string,
       <SideTable position={[-5, 0, 3]} />
       <SideTable position={[5, 0, 3]} />
       
-      {/* Additional chairs */}
-      <VictorianChair position={[-4, 0, 1]} rotation={[0, Math.PI / 4, 0]} />
-      <VictorianChair position={[4, 0, 1]} rotation={[0, -Math.PI / 4, 0]} />
+      {/* Additional chairs - repositioned for better flow */}
+      <VictorianChair position={[-3, 0, -0.5]} rotation={[0, Math.PI / 3, 0]} />
+      <VictorianChair position={[3.5, 0, 1.5]} rotation={[0, -Math.PI / 6, 0]} />
       
-      {/* Persian Rugs */}
-      <PersianRug position={[-4, 0, 1]} size={[2, 2]} />
-      <PersianRug position={[4, 0, 1]} size={[2, 2]} />
+      {/* Persian Rugs - adjusted to match new chair positions */}
+      <PersianRug position={[-3, 0, -0.5]} size={[2, 2]} />
+      <PersianRug position={[3.5, 0, 1.5]} size={[2, 2]} />
       <PersianRug position={[0, 0, 5]} size={[3, 2]} />
+      
+      {/* Small reading table near window */}
+      <SideTable position={[2, 0, -7]} />
       
       {/* Scattered Detective Props */}
       <DetectiveProps position={[-3, 0.75, -1]} type="papers" />
@@ -129,6 +141,13 @@ const DetectiveOfficeScene = ({ onInteraction }: { onInteraction: (type: string,
       <DetectiveProps position={[3, 0, 7]} type="newspaper" />
       <DetectiveProps position={[-2, 0, 6]} type="papers" />
       <DetectiveProps position={[7, 0, 4]} type="evidence-box" />
+      
+      {/* New Sherlock Holmes themed props */}
+      <DetectiveProps position={[-4, 0, -6]} type="violin-case" />
+      <DetectiveProps position={[-5, 1.1, 3]} type="pipe-rack" />
+      <DetectiveProps position={[5, 1.1, 3]} type="case-files" />
+      <DetectiveProps position={[2, 1.1, -7]} type="map" />
+      <DetectiveProps position={[-7, 0, 3]} type="case-files" />
     </>
   );
 };
@@ -265,7 +284,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
       <Canvas shadows camera={{ position: [0, 1.7, 5], fov: 75 }}>
         <CameraControls />
         <Lighting lampOn={lampOn} detectiveVision={detectiveVision} />
-        <DetectiveOfficeScene onInteraction={handleInteraction} />
+        <DetectiveOfficeScene onInteraction={handleInteraction} lampOn={lampOn} />
       </Canvas>
 
       {/* Detective Vision Indicator */}
