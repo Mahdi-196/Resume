@@ -7,7 +7,7 @@ import { OfficeRoom } from './OfficeRoom';
 import { ExecutiveDesk } from './ExecutiveDesk';
 import { OfficeWindow } from './OfficeWindow';
 import { VictorianChair } from './VictorianChair';
-import { DetectiveInvestigationBoard } from './DetectiveInvestigationBoard';
+import { InteractiveDetectiveBoard } from './InteractiveDetectiveBoard';
 import { Lighting } from './Lighting';
 import { Bookshelf } from './Bookshelf';
 import { Fireplace } from './Fireplace';
@@ -89,17 +89,18 @@ const DetectiveOfficeScene = ({ onInteraction, lampOn }: { onInteraction: (type:
       {/* Desk Chair */}
       <VictorianChair position={[0, 0, -3]} rotation={[0, 0, 0]} />
       
-      {/* Detective Investigation Board */}
-      <DetectiveInvestigationBoard onInteraction={onInteraction} />
+      {/* Interactive Detective Board */}
+      <InteractiveDetectiveBoard onInteraction={onInteraction} />
       
       {/* Asymmetrical Bookshelves - Left wall (3 bookshelves with gaps) */}
       <Bookshelf position={[-9.0, 0, -6]} rotation={[0, Math.PI / 2, 0]} variant={1} />
       <Bookshelf position={[-9.0, 0, 0]} rotation={[0, Math.PI / 2, 0]} variant={2} />
       <Bookshelf position={[-9.0, 0, 6]} rotation={[0, Math.PI / 2, 0]} variant={3} />
       
-      {/* Right wall (2 bookshelves with space for door) */}
-      <Bookshelf position={[9.0, 0, -6]} rotation={[0, -Math.PI / 2, 0]} variant={5} />
-      <Bookshelf position={[9.0, 0, 2]} rotation={[0, -Math.PI / 2, 0]} variant={6} />
+      {/* Right wall (3 touching bookshelves) */}
+      <Bookshelf position={[9.0, 0, -3]} rotation={[0, -Math.PI / 2, 0]} variant={5} />
+      <Bookshelf position={[9.0, 0, 0]} rotation={[0, -Math.PI / 2, 0]} variant={3} />
+      <Bookshelf position={[9.0, 0, 3]} rotation={[0, -Math.PI / 2, 0]} variant={6} />
       
       {/* Corner bookshelf - L-shaped arrangement */}
       <Bookshelf position={[-8, 0, -9]} rotation={[0, 0, 0]} variant={7} />
@@ -107,8 +108,8 @@ const DetectiveOfficeScene = ({ onInteraction, lampOn }: { onInteraction: (type:
       {/* Victorian Door on right wall */}
       <VictorianDoor position={[9.5, 0, 8]} rotation={[0, -Math.PI / 2, 0]} onInteraction={onInteraction} />
       
-      {/* Victorian Chandelier - moved down from ceiling */}
-      <VictorianChandelier position={[0, 9, 2]} isLit={lampOn} />
+      {/* Victorian Chandelier - lowered 10% for smaller room */}
+      <VictorianChandelier position={[0, 8.1, 2]} isLit={lampOn} />
       
       {/* Fireplace */}
       <Fireplace />
@@ -116,6 +117,13 @@ const DetectiveOfficeScene = ({ onInteraction, lampOn }: { onInteraction: (type:
       {/* Filing Cabinets */}
       <FilingCabinet position={[-6, 0, -8]} rotation={[0, 0, 0]} />
       <FilingCabinet position={[6, 0, -8]} rotation={[0, Math.PI, 0]} />
+      
+      {/* Filing Cabinets against right corner walls */}
+      <FilingCabinet position={[9.5, 0, -9.5]} rotation={[0, -Math.PI / 4, 0]} />
+      <FilingCabinet position={[9.5, 0, -7.5]} rotation={[0, -Math.PI / 2, 0]} />
+      <FilingCabinet position={[9.5, 0, -6.5]} rotation={[0, -Math.PI / 2, 0]} />
+      <FilingCabinet position={[7.5, 0, -9.5]} rotation={[0, 0, 0]} />
+      <FilingCabinet position={[6.5, 0, -9.5]} rotation={[0, 0, 0]} />
       
       {/* Side Tables with Detective Items */}
       <SideTable position={[-5, 0, 3]} />
@@ -144,10 +152,21 @@ const DetectiveOfficeScene = ({ onInteraction, lampOn }: { onInteraction: (type:
       
       {/* New Sherlock Holmes themed props */}
       <DetectiveProps position={[-4, 0, -6]} type="violin-case" />
-      <DetectiveProps position={[-5, 1.1, 3]} type="pipe-rack" />
       <DetectiveProps position={[5, 1.1, 3]} type="case-files" />
       <DetectiveProps position={[2, 1.1, -7]} type="map" />
       <DetectiveProps position={[-7, 0, 3]} type="case-files" />
+      
+      {/* Detective props on wall-adjacent filing cabinets */}
+      <DetectiveProps position={[9.5, 1.1, -9.5]} type="papers" />
+      <DetectiveProps position={[9.5, 1.1, -7.5]} type="case-files" />
+      <DetectiveProps position={[9.5, 1.1, -6.5]} type="papers" />
+      <DetectiveProps position={[7.5, 1.1, -9.5]} type="case-files" />
+      <DetectiveProps position={[6.5, 1.1, -9.5]} type="papers" />
+      <DetectiveProps position={[9.2, 0, -9.2]} type="evidence-box" />
+      <DetectiveProps position={[9.2, 0, -8]} type="papers" />
+      <DetectiveProps position={[9.2, 0, -7]} type="newspaper" />
+      <DetectiveProps position={[8, 0, -9.2]} type="evidence-box" />
+      <DetectiveProps position={[7, 0, -9.2]} type="case-files" />
     </>
   );
 };
@@ -159,10 +178,20 @@ const CameraControls = () => {
     forward: false,
     backward: false,
     left: false,
-    right: false
+    right: false,
+    up: false,
+    down: false
   });
+  
+  const yaw = useRef(0);
+  const pitch = useRef(0);
+  const isMouseLocked = useRef(false);
 
   useEffect(() => {
+    // Set initial camera position and rotation
+    camera.position.set(0, 2, 5);
+    camera.rotation.set(0, 0, 0);
+    
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.code) {
         case 'KeyW':
@@ -176,6 +205,13 @@ const CameraControls = () => {
           break;
         case 'KeyD':
           moveState.current.right = true;
+          break;
+        case 'Space':
+          event.preventDefault();
+          moveState.current.up = true;
+          break;
+        case 'ShiftLeft':
+          moveState.current.down = true;
           break;
       }
     };
@@ -194,39 +230,76 @@ const CameraControls = () => {
         case 'KeyD':
           moveState.current.right = false;
           break;
+        case 'Space':
+          moveState.current.up = false;
+          break;
+        case 'ShiftLeft':
+          moveState.current.down = false;
+          break;
       }
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-      if (document.pointerLockElement === gl.domElement) {
+      if (isMouseLocked.current) {
         const sensitivity = 0.002;
-        camera.rotation.y -= event.movementX * sensitivity;
-        camera.rotation.x -= event.movementY * sensitivity;
         
-        // Clamp vertical rotation
-        camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+        yaw.current -= event.movementX * sensitivity;
+        pitch.current -= event.movementY * sensitivity;
+        
+        // Clamp vertical rotation to prevent flipping
+        pitch.current = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, pitch.current));
+        
+        // Apply rotations
+        camera.rotation.order = 'YXZ';
+        camera.rotation.y = yaw.current;
+        camera.rotation.x = pitch.current;
       }
     };
 
-    const handleClick = () => {
-      gl.domElement.requestPointerLock();
+    const handleClick = (event: MouseEvent) => {
+      // Prevent event from bubbling to scene objects
+      event.stopPropagation();
+      event.preventDefault();
+      if (!isMouseLocked.current) {
+        gl.domElement.requestPointerLock();
+      }
     };
+
+    const handlePointerLockChange = () => {
+      isMouseLocked.current = document.pointerLockElement === gl.domElement;
+      if (isMouseLocked.current) {
+        gl.domElement.style.cursor = 'none';
+      } else {
+        gl.domElement.style.cursor = 'crosshair';
+      }
+    };
+
+    // Auto-enable pointer lock on load
+    const enablePointerLock = () => {
+      if (!isMouseLocked.current) {
+        gl.domElement.requestPointerLock();
+      }
+    };
+    
+    setTimeout(enablePointerLock, 100);
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     gl.domElement.addEventListener('mousemove', handleMouseMove);
     gl.domElement.addEventListener('click', handleClick);
+    document.addEventListener('pointerlockchange', handlePointerLockChange);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       gl.domElement.removeEventListener('mousemove', handleMouseMove);
       gl.domElement.removeEventListener('click', handleClick);
+      document.removeEventListener('pointerlockchange', handlePointerLockChange);
     };
   }, [camera, gl]);
 
   useFrame(() => {
-    const speed = 0.1;
+    const speed = 0.15;
     const direction = new THREE.Vector3();
     
     if (moveState.current.forward) {
@@ -241,10 +314,24 @@ const CameraControls = () => {
     if (moveState.current.right) {
       direction.x += speed;
     }
+    if (moveState.current.up) {
+      direction.y += speed;
+    }
+    if (moveState.current.down) {
+      direction.y -= speed;
+    }
 
-    // Apply rotation to movement direction
-    direction.applyEuler(camera.rotation);
-    camera.position.add(direction);
+    // Apply camera rotation to movement direction
+    const euler = new THREE.Euler(0, yaw.current, 0);
+    direction.applyEuler(euler);
+    
+    // Add bounds to keep camera within reasonable limits
+    const newPosition = camera.position.clone().add(direction);
+    newPosition.x = Math.max(-15, Math.min(15, newPosition.x));
+    newPosition.y = Math.max(0.5, Math.min(12, newPosition.y));
+    newPosition.z = Math.max(-15, Math.min(15, newPosition.z));
+    
+    camera.position.copy(newPosition);
   });
 
   return null;
@@ -281,7 +368,13 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
 
   return (
     <div className="w-full h-screen bg-noir-shadow">
-      <Canvas shadows camera={{ position: [0, 1.7, 5], fov: 75 }}>
+      <Canvas 
+        shadows 
+        camera={{ position: [0, 2, 5], fov: 75 }}
+        onCreated={({ gl }) => {
+          gl.domElement.style.cursor = 'none';
+        }}
+      >
         <CameraControls />
         <Lighting lampOn={lampOn} detectiveVision={detectiveVision} />
         <DetectiveOfficeScene onInteraction={handleInteraction} lampOn={lampOn} />
@@ -301,9 +394,9 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
 
       {/* Enhanced Controls Hint */}
       <div className="absolute bottom-4 left-4 text-detective-paper text-sm space-y-1">
-        <p>WASD - Move • Mouse - Look Around • Click - Interact</p>
+        <p>WASD - Move • Mouse - Look Around • Space/Shift - Up/Down</p>
         <p>Tab - Detective Vision • Click Floor - Move Detective</p>
-        <p>Click anywhere to enable mouse look</p>
+        <p>ESC - Release mouse • Click - Re-enable mouse look</p>
       </div>
     </div>
   );
