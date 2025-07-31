@@ -52,8 +52,8 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
       });
       
       try {
-        // Smooth zoom to board
-        const boardPosition = new THREE.Vector3(0, 4.5, 8.5); // Close to board
+        // Smooth zoom to board - position to see full board
+        const boardPosition = new THREE.Vector3(0, 4.5, 4.5); // Further back to see board and wall
         const boardTarget = new THREE.Vector3(0, 4.5, 9.9); // Board center
         
         await cameraControls.setLookAt(
@@ -122,13 +122,17 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         event.preventDefault();
         setDetectiveVision(prev => !prev);
       } else if (event.key === 'r' || event.key === 'R') {
-        event.preventDefault();
-        if (showBoardContent) {
-          handleBoardContentClose();
-        } else {
-          handleBoardClick();
+        // Only handle R if not in pointer lock mode
+        if (!document.pointerLockElement) {
+          event.preventDefault();
+          if (showBoardContent) {
+            handleBoardContentClose();
+          } else {
+            handleBoardClick();
+          }
         }
       } else if (event.key === 'Escape' && showBoardContent) {
+        event.preventDefault();
         handleBoardContentClose();
       }
     };
@@ -149,6 +153,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         <EnhancedCameraControls 
           ref={cameraControlsRef} 
           isTransitioning={isTransitioning}
+          showBoardContent={showBoardContent}
         />
         <Lighting lampOn={lampOn} detectiveVision={detectiveVision} />
         <DetectiveOfficeScene 

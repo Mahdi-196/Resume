@@ -4,6 +4,7 @@ import * as THREE from 'three';
 
 interface EnhancedCameraControlsProps {
   isTransitioning: boolean;
+  showBoardContent?: boolean;
 }
 
 interface CameraControlsRef {
@@ -17,7 +18,7 @@ interface CameraControlsRef {
 }
 
 export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCameraControlsProps>(
-  ({ isTransitioning }, ref) => {
+  ({ isTransitioning, showBoardContent = false }, ref) => {
     const { camera, gl } = useThree();
     const moveState = useRef({
       forward: false,
@@ -80,7 +81,7 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
     }));
 
     useEffect(() => {
-      if (isTransitioning) return;
+      if (isTransitioning || showBoardContent) return;
 
       // Set initial camera position and rotation
       camera.position.set(0, 2, 5);
@@ -91,6 +92,12 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
         
         // Don't handle R key - let DetectiveOffice handle it
         if (event.key === 'r' || event.key === 'R') {
+          return;
+        }
+        
+        // Exit pointer lock on Escape
+        if (event.key === 'Escape' && isMouseLocked.current) {
+          document.exitPointerLock();
           return;
         }
         
@@ -227,7 +234,7 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
     }, [camera, gl, isTransitioning]);
 
     useFrame(() => {
-      if (isTransitioning) return;
+      if (isTransitioning || showBoardContent) return;
       
       const speed = 0.1;
       const direction = new THREE.Vector3();
@@ -251,9 +258,11 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
         direction.y -= speed;
       }
 
-      // Apply camera rotation to movement direction
-      const euler = new THREE.Euler(0, yaw.current, 0);
-      direction.applyEuler(euler);
+      // Apply camera rotation to movement direction (only horizontal rotation for movement)
+      if (direction.length() > 0) {
+        const euler = new THREE.Euler(0, yaw.current, 0);
+        direction.applyEuler(euler);
+      }
       
       // Add bounds to keep camera within reasonable limits
       const newPosition = camera.position.clone().add(direction);
@@ -262,6 +271,15 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
       newPosition.z = Math.max(-50, Math.min(50, newPosition.z));
       
       camera.position.copy(newPosition);
+      
+      // Update look target to maintain current view direction
+      const viewDirection = new THREE.Vector3(
+        -Math.sin(yaw.current) * Math.cos(pitch.current),
+        Math.sin(pitch.current),
+        -Math.cos(yaw.current) * Math.cos(pitch.current)
+      );
+      lookTarget.current.copy(camera.position).add(viewDirection);
+      camera.lookAt(lookTarget.current);
     });
 
     return null;
