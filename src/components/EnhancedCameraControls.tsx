@@ -104,22 +104,28 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
         switch (event.code) {
           case 'KeyW':
             moveState.current.forward = true;
+            requestPointerLockOnMovement();
             break;
           case 'KeyS':
             moveState.current.backward = true;
+            requestPointerLockOnMovement();
             break;
           case 'KeyA':
             moveState.current.left = true;
+            requestPointerLockOnMovement();
             break;
           case 'KeyD':
             moveState.current.right = true;
+            requestPointerLockOnMovement();
             break;
           case 'Space':
             event.preventDefault();
             moveState.current.up = true;
+            requestPointerLockOnMovement();
             break;
           case 'ShiftLeft':
             moveState.current.down = true;
+            requestPointerLockOnMovement();
             break;
         }
       };
@@ -199,10 +205,16 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
           }
         }
         
-        // Only lock pointer if not clicking on board
+        // Lock pointer when clicking in the scene
         if (!isMouseLocked.current) {
           event.stopPropagation();
           event.preventDefault();
+          gl.domElement.requestPointerLock();
+        }
+      };
+
+      const requestPointerLockOnMovement = () => {
+        if (!isMouseLocked.current && !isTransitioning && !showBoardContent) {
           gl.domElement.requestPointerLock();
         }
       };

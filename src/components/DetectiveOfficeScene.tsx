@@ -166,32 +166,19 @@ export const DetectiveOfficeScene = ({
       {/* Small reading table near window */}
       <SideTable position={[2, 0, -7]} />
       
-      {/* Scattered Detective Props */}
+      {/* Detective Props - Only on furniture surfaces */}
       <DetectiveProps position={[-3, 0.75, -1]} type="papers" />
       <DetectiveProps position={[2.5, 1.1, -0.5]} type="magnifying-glass" />
       <DetectiveProps position={[-1.5, 1.1, -1.5]} type="pipe" />
-      <DetectiveProps position={[-6, 0, 5]} type="evidence-box" />
-      <DetectiveProps position={[3, 0, 7]} type="newspaper" />
-      <DetectiveProps position={[-2, 0, 6]} type="papers" />
-      <DetectiveProps position={[7, 0, 4]} type="evidence-box" />
-      
-      {/* New Sherlock Holmes themed props */}
-      <DetectiveProps position={[-4, 0, -6]} type="violin-case" />
       <DetectiveProps position={[5, 1.1, 3]} type="case-files" />
       <DetectiveProps position={[2, 1.1, -7]} type="map" />
-      <DetectiveProps position={[-7, 0, 3]} type="case-files" />
       
-      {/* Detective props on wall-adjacent filing cabinets */}
+      {/* Detective props on filing cabinets only */}
       <DetectiveProps position={[9.5, 1.1, -9.5]} type="papers" />
       <DetectiveProps position={[9.5, 1.1, -7.5]} type="case-files" />
       <DetectiveProps position={[9.5, 1.1, -6.5]} type="papers" />
       <DetectiveProps position={[7.5, 1.1, -9.5]} type="case-files" />
       <DetectiveProps position={[6.5, 1.1, -9.5]} type="papers" />
-      <DetectiveProps position={[9.2, 0, -9.2]} type="evidence-box" />
-      <DetectiveProps position={[9.2, 0, -8]} type="papers" />
-      <DetectiveProps position={[9.2, 0, -7]} type="newspaper" />
-      <DetectiveProps position={[8, 0, -9.2]} type="evidence-box" />
-      <DetectiveProps position={[7, 0, -9.2]} type="case-files" />
     </>
   );
 };
