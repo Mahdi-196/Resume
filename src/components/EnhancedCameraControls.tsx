@@ -15,6 +15,7 @@ interface CameraControlsRef {
     enableTransition?: boolean
   ) => Promise<void>;
   getTarget: (target: THREE.Vector3) => void;
+  lock: () => void;
 }
 
 export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCameraControlsProps>(
@@ -35,6 +36,18 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
     const lookTarget = useRef(new THREE.Vector3(0, 0, -1));
 
     useImperativeHandle(ref, () => ({
+      lock: () => {
+        if (!isMouseLocked.current && !isTransitioning && !showBoardContent) {
+          // Add a small delay to ensure DOM is ready
+          setTimeout(() => {
+            if (gl.domElement && document.body.contains(gl.domElement)) {
+              gl.domElement.requestPointerLock().catch((error) => {
+                console.warn('Failed to request pointer lock:', error);
+              });
+            }
+          }, 50);
+        }
+      },
       camera,
       setLookAt: async (posX: number, posY: number, posZ: number, targetX: number, targetY: number, targetZ: number, enableTransition?: boolean) => {
         if (enableTransition) {
@@ -78,7 +91,7 @@ export const EnhancedCameraControls = forwardRef<CameraControlsRef, EnhancedCame
       getTarget: (target: THREE.Vector3) => {
         target.copy(lookTarget.current);
       }
-    }));
+    }), [camera, gl]);
 
     useEffect(() => {
       if (isTransitioning || showBoardContent) return;

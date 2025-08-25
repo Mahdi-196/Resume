@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, LegacyRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { EnhancedCameraControls } from './EnhancedCameraControls';
@@ -13,6 +13,7 @@ interface CameraControlsRef {
     enableTransition?: boolean
   ) => Promise<void>;
   getTarget: (target: THREE.Vector3) => void;
+  lock: () => void;
 }
 
 interface DetectiveOfficeProps {
@@ -30,12 +31,20 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
     position: THREE.Vector3;
     target: THREE.Vector3;
   } | null>(null);
+  const [wasPointerLocked, setWasPointerLocked] = useState(false);
   
   const cameraControlsRef = useRef<CameraControlsRef>(null);
 
   // Board transition functions
   const handleBoardClick = async () => {
     if (isTransitioning) return;
+
+    setWasPointerLocked(!!document.pointerLockElement);
+    
+    // Exit pointer lock immediately when opening board
+    if (document.pointerLockElement) {
+      document.exitPointerLock();
+    }
     
     setIsTransitioning(true);
     
@@ -98,6 +107,14 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
       setIsTransitioning(false);
       setOriginalCameraState(null);
       
+      // Re-engage pointer lock after a short delay to ensure camera transition is complete
+      if (wasPointerLocked) {
+        setTimeout(() => {
+          cameraControlsRef.current?.lock();
+          setWasPointerLocked(false); // Reset the flag
+        }, 100); // Small delay to ensure smooth transition
+      }
+      
     } catch (error) {
       console.error('Camera return transition failed:', error);
       setIsTransitioning(false);
@@ -151,7 +168,7 @@ export const DetectiveOffice = ({ onInteraction }: DetectiveOfficeProps) => {
         }}
       >
         <EnhancedCameraControls 
-          ref={cameraControlsRef} 
+          ref={cameraControlsRef as unknown as React.Ref<CameraControlsRef>}
           isTransitioning={isTransitioning}
           showBoardContent={showBoardContent}
         />

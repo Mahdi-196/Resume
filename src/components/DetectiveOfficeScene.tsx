@@ -10,9 +10,8 @@ import { InteractiveDetectiveBoard } from './InteractiveDetectiveBoard';
 import { Bookshelf } from './Bookshelf';
 import { Fireplace } from './Fireplace';
 import { FilingCabinet } from './FilingCabinet';
-import { DetectiveProps } from './DetectiveProps';
-import { SideTable } from './SideTable';
-import { PersianRug } from './PersianRug';
+
+
 import { VictorianDoor } from './VictorianDoor';
 import { VictorianChandelier } from './VictorianChandelier';
 import { ThreeEvent } from '../types/three';
@@ -150,35 +149,8 @@ export const DetectiveOfficeScene = ({
       <FilingCabinet position={[7.5, 0, -9.5]} rotation={[0, 0, 0]} />
       <FilingCabinet position={[6.5, 0, -9.5]} rotation={[0, 0, 0]} />
       
-      {/* Side Tables with Detective Items */}
-      <SideTable position={[-5, 0, 3]} />
-      <SideTable position={[5, 0, 3]} />
-      
-      {/* Additional chairs - repositioned for better flow */}
-      <VictorianChair position={[-3, 0, -0.5]} rotation={[0, Math.PI / 3, 0]} />
-      <VictorianChair position={[3.5, 0, 1.5]} rotation={[0, -Math.PI / 6, 0]} />
-      
-      {/* Persian Rugs - adjusted to match new chair positions */}
-      <PersianRug position={[-3, 0, -0.5]} size={[2, 2]} />
-      <PersianRug position={[3.5, 0, 1.5]} size={[2, 2]} />
-      <PersianRug position={[0, 0, 5]} size={[3, 2]} />
-      
-      {/* Small reading table near window */}
-      <SideTable position={[2, 0, -7]} />
-      
-      {/* Detective Props - Only on furniture surfaces */}
-      <DetectiveProps position={[-3, 0.75, -1]} type="papers" />
-      <DetectiveProps position={[2.5, 1.1, -0.5]} type="magnifying-glass" />
-      <DetectiveProps position={[-1.5, 1.1, -1.5]} type="pipe" />
-      <DetectiveProps position={[5, 1.1, 3]} type="case-files" />
-      <DetectiveProps position={[2, 1.1, -7]} type="map" />
-      
-      {/* Detective props on filing cabinets only */}
-      <DetectiveProps position={[9.5, 1.1, -9.5]} type="papers" />
-      <DetectiveProps position={[9.5, 1.1, -7.5]} type="case-files" />
-      <DetectiveProps position={[9.5, 1.1, -6.5]} type="papers" />
-      <DetectiveProps position={[7.5, 1.1, -9.5]} type="case-files" />
-      <DetectiveProps position={[6.5, 1.1, -9.5]} type="papers" />
+
+
     </>
   );
 };
